@@ -23,8 +23,11 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import SidebarContent from "../../../components/sidebar";
-const HeaderContent: React.FC<{ title: string }> = ({ title }) => {
+import { useAppSelector } from "@/redux/hooks";
+
+const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { superAdminInfo } = useAppSelector(state => state.auth)
 
   return (
     <Box >
@@ -44,7 +47,7 @@ const HeaderContent: React.FC<{ title: string }> = ({ title }) => {
               {title}
             </Heading>
             <Text fontWeight="400" fontSize="12px">
-              Welcome Jennifer
+              Welcome {superAdminInfo?.first_name}
             </Text>
           </Box>
           <Menu>

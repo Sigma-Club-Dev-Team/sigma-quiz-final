@@ -5,18 +5,23 @@ import AddQuizTrigger from './AddQuiz'
 import Quizzes from './Quizzes'
 import { ContainImage } from '../myImage'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { getQuizzes } from '@/redux/slices/quiz/quizSlice'
+import { getQuizzes, IQuiz, setQuiz } from '@/redux/slices/quiz/quizSlice'
+import { useRouter } from 'next/navigation'
 
 function SelectQuiz() {
-  const [quizId, setQuizId] = useState('')
+  const [quizObj, setQuizObj] = useState<IQuiz | null>(null)
   const { quizzes, quiz } = useAppSelector(state => state.quiz)
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   useEffect(()=>{
     dispatch(getQuizzes())
   }, [])
 
-
+  const handleSetQuiz = () => {
+    dispatch(setQuiz((quizObj)))
+    router.push('/schools/round')
+  }
   return (
     <Flex alignItems={'center'} justifyContent={'center'} bg={'white'} p={{base: '.5rem', md: '1rem', lg: '2rem'}}>
       <Flex
@@ -63,11 +68,11 @@ function SelectQuiz() {
                     textAlign={'left'}
                     fontWeight={'400'}
                   >
-                    Select a quiz
+                    {quizObj ? quizObj.title : 'Select a quiz'}
                   </MenuButton>
                   <MenuList>
                     {quizzes.map((quiz, index) => (
-                      <MenuItem onClick={()=>setQuizId(quiz.id)} key={index}>{quiz.title}</MenuItem>
+                      <MenuItem onClick={()=>setQuizObj(quiz)} key={index}>{quiz.title}</MenuItem>
                     ))}
                   </MenuList>
                 </Menu>
@@ -82,7 +87,7 @@ function SelectQuiz() {
             </Flex>
           </VStack>
 
-          <Button alignSelf={'center'} p={"1.5rem"} width={'70%'} bg={'brand.purple'} color={'brand.white'} _hover={{ opacity: .8 }} >
+          <Button onClick={handleSetQuiz} alignSelf={'center'} p={"1.5rem"} width={'70%'} bg={'brand.purple'} color={'brand.white'} _hover={{ opacity: .8 }} >
             Get Started
           </Button>
 

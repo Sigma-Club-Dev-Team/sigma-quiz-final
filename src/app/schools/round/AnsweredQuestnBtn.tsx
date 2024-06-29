@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Button, Flex, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Question } from "@/redux/slices/quiz/quizSlice";
 
 interface AnsweredButtonsProps {
-  showNavigation?: boolean; 
+  showNavigation?: boolean;
+  questions: Question[] 
 }
 
 const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
   showNavigation = true,
+  questions
 }) => {
   const totalButtons = 20; 
   const initialVisibleButtons = 10; 
@@ -42,26 +45,23 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
           disabled={startIndex === 0}
         />
       )}
-      {Array.from({ length: totalButtons }, (_, index) => {
-        if (index >= startIndex && index < endIndex) {
-          return (
-            <Button
-              key={index}
-              fontFamily="Poppins"
-              fontSize="14px"
-              fontWeight={500}
-              padding="10px"
-              mr={2}
-              mb={2}
-              color="white"
-              size="md"
-              bg={index % 2 === 0 ? "#FF0000" : "#1FAF38"}
-            >
-              {index + 1}
-            </Button>
-          );
-        }
-        return null;
+      {questions.toSorted((a, b) => a.question_number - b.question_number).map((question) => {
+        return (
+          <Button
+            key={question.id}
+            fontFamily="Poppins"
+            fontSize="14px"
+            fontWeight={500}
+            padding="10px"
+            mr={2}
+            mb={2}
+            color="white"
+            size="md"
+            bg={question.answered_correctly ? "#FF0000" : "#1FAF38"}
+          >
+            {question.question_number}
+          </Button>
+        );
       })}
       {showNavigation && (
         <IconButton

@@ -2,9 +2,11 @@ import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFo
 import React from "react"
 import { LuPencil } from "react-icons/lu"
 import EditQuizTrigger from "./EditQuiz"
+import { useAppSelector } from "@/redux/hooks"
 
 function Quizzes() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { quizzes } = useAppSelector(state => state.quiz)
     return (
       <>
         <Button background={'white'} fontWeight={'400'} color={'brand.grey'} leftIcon={<LuPencil />} onClick={onOpen}>Edit Quiz</Button>
@@ -25,8 +27,8 @@ function Quizzes() {
                 <Flex direction={'column'} gap={'1rem'}>
                     <Text fontSize={'.875rem'} fontWeight={'500'}>Quizzes</Text>
                     <Flex direction={'column'} gap={'1rem'}>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
-                            <EditQuizTrigger key={index} />
+                        {quizzes.map((quiz, index) => (
+                            <EditQuizTrigger quiz={quiz} key={index} />
                         ))}
                     </Flex>
                 </Flex>
