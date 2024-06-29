@@ -53,7 +53,7 @@ const DetailsPage: React.FC = () => {
 
       <Flex   direction={{base: 'column', md: 'row'}} alignItems={'center'}>
         <Box
-          width={{base: '90%', md: '600px'}}
+          width={{base: '90%', md: '700px'}}
           height="auto"
           bg="white"
           boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
@@ -113,10 +113,8 @@ const DetailsPage: React.FC = () => {
         </Box>
 
         <Box>
-          <AnsweredButtons showNavigation={false} />
-          <AnsweredButtons showNavigation={false} />
-          <AnsweredButtons showNavigation={false} />
-          <AnsweredButtons showNavigation={false} />
+          <AnsweredButtons/>
+         
         </Box>
       </Flex>
     </Box>

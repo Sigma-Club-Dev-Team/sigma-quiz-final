@@ -1,81 +1,52 @@
-import React, { useState } from "react";
-import { Button, Flex, IconButton } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {  Button, Flex, } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
-interface AnsweredButtonsProps {
-  showNavigation?: boolean; 
-}
-
-const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
-  showNavigation = true,
-}) => {
-  const totalButtons = 20; 
-  const initialVisibleButtons = 10; 
-
-  const [startIndex, setStartIndex] = useState(0); 
-
-  // Calculate end index based on start index and number of buttons to show
-  const endIndex = startIndex + initialVisibleButtons;
-
-  const handlePrevClick = () => {
-    if (startIndex > 0) {
-      setStartIndex((prevIndex) => prevIndex - 1);
-    }
+const QuestionsBTN: React.FC = () => {
+  // Define common button props
+  const buttonProps = {
+    fontFamily: "Poppins",
+    fontSize: "14px",
+    fontWeight: 500,
+    padding: "10px",
+    mr: 2,
   };
 
-  const handleNextClick = () => {
-    if (endIndex < totalButtons) {
-      setStartIndex((prevIndex) => prevIndex + 1);
+  // Array of button labels from 1 to 30
+  const buttonLabels = Array.from({ length: 20 }, (_, i) => (i + 1).toString());
+
+  // State to store the indices of the buttons to be highlighted
+  const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
+
+  useEffect(() => {
+    const numberOfHighlights = 10; // Number of buttons to highlight
+    const indices = new Set<number>();
+
+    while (indices.size < numberOfHighlights) {
+      const randomIndex = Math.floor(Math.random() * 30);
+      indices.add(randomIndex);
     }
-  };
+
+    setHighlightedIndices(Array.from(indices));
+  }, []);
 
   return (
-    <Flex wrap="wrap" justify="center" align="center" alignItems="center">
-      {showNavigation && (
-        <IconButton
-          aria-label="Backward"
-          icon={<ChevronLeftIcon />}
-          variant="ghost"
-          size="md"
-          ml={2}
-          onClick={handlePrevClick}
-          disabled={startIndex === 0}
-        />
-      )}
-      {Array.from({ length: totalButtons }, (_, index) => {
-        if (index >= startIndex && index < endIndex) {
-          return (
-            <Button
-              key={index}
-              fontFamily="Poppins"
-              fontSize="14px"
-              fontWeight={500}
-              padding="10px"
-              mr={2}
-              mb={2}
-              color="white"
-              size="md"
-              bg={index % 2 === 0 ? "#FF0000" : "#1FAF38"}
-            >
-              {index + 1}
-            </Button>
-          );
-        }
-        return null;
-      })}
-      {showNavigation && (
-        <IconButton
-          aria-label="Forward"
-          icon={<ChevronRightIcon />}
-          variant="ghost"
-          size="md"
-          mr={2}
-          onClick={handleNextClick}
-          disabled={endIndex >= totalButtons}
-        />
-      )}
+    <Flex flexWrap="wrap"   gap={2} py={6}>
+     
+      {buttonLabels.map((label, index) => (
+        <Button
+          key={index}
+          {...buttonProps}
+          size="sm"
+          bg={highlightedIndices.includes(index) ? "#FF0000" : "#1FAF38"}
+          mx={2}
+        >
+          {label}
+        </Button>
+      ))}
+    
     </Flex>
   );
 };
 
-export default AnsweredButtons;
+export default QuestionsBTN;
