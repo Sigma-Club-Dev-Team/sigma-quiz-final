@@ -31,33 +31,20 @@ const QuestionsBTN: React.FC = () => {
   }, []);
 
   return (
-    <Flex flexWrap="wrap" justify="center" align="center" alignItems="center">
-      <Button
-        {...buttonProps}
-        size="sm"
-        bg={"#f2f2f2"}
-        leftIcon={<ChevronLeftIcon />}
-        aria-label="Backward"
-        mr={2}
-      />
+    <Flex flexWrap="wrap" justify="center" align="center" alignItems="center" gap={2}>
+     
       {buttonLabels.map((label, index) => (
         <Button
           key={index}
           {...buttonProps}
           size="sm"
           bg={highlightedIndices.includes(index) ? "#FF000033" : "transparent"}
+          mx={2}
         >
           {label}
         </Button>
       ))}
-      <Button
-        {...buttonProps}
-        size="sm"
-        rightIcon={<ChevronRightIcon />}
-        aria-label="Forward"
-        bg={"#f2f2f2"}
-        ml={2}
-      />
+    
     </Flex>
   );
 };
