@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { contentData } from "../content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import AnsweredButtons from "../AnsweredQuestnBtn";
-import TopMenu from "../TopMenu";
+import RoundsBtn from '../RoundsBtn'
 
 const DetailsPage: React.FC = () => {
   const pathname = usePathname();
@@ -38,7 +38,7 @@ const DetailsPage: React.FC = () => {
 
   return (
     <Box px={10} fontFamily={"Poppins"}>
-      <TopMenu title={pageContent.title} />
+      <RoundsBtn/>
 
       {/* Backward Icon */}
       <IconButton
