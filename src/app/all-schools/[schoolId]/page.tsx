@@ -7,7 +7,7 @@ import { contentData } from "../../schools/[pageId]/content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import TopNav from "../../schools/[pageId]/Topnav";
 import RoundsBtn from "../../schools/[pageId]/RoundsBtn";
-import { SchoolResultSummary } from "../page";
+import  SchoolResultSummary  from "../../all-schools/SchoolResutSummary";
 import {
     IconButton
   } from "@chakra-ui/react";
