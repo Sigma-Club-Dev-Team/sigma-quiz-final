@@ -1,46 +1,42 @@
 "use client";
 
 import React from "react";
-import { Box, Text, Flex, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  IconButton,
+  useBreakpointValue
+} from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { contentData } from "../content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
+import TopNav from '../Topnav'
 import AnsweredButtons from "../AnsweredQuestnBtn";
-import RoundsBtn from '../RoundsBtn'
+import RoundsBtn from '../RoundsBtn';
 
 const DetailsPage: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Log the current pathname for debugging
-  console.log("Current pathname:", pathname);
-
-  // Extract pageId from the current path
   const parts = pathname.split("/");
-  const pageId = parts[2]; // Assuming pageId is at index 2 based on the given URL structure
-
-  // Log the extracted pageId for debugging
-  console.log("Extracted pageId:", pageId);
+  const pageId = parts[2];
 
   const pageContent = contentData.find((content) => content.id === pageId);
-
-  // Log the found pageContent for debugging
-  console.log("Found pageContent:", pageContent);
 
   if (!pageContent) {
     return <div>No data found</div>;
   }
 
-  // Function to handle navigation back
   const goBack = () => {
     router.back();
   };
 
+ 
   return (
-    <Box px={10} fontFamily={"Poppins"}>
-      <RoundsBtn/>
+    <Box px={{ base: 4, md: 10 }} fontFamily={"Poppins"} > 
+     
 
-      {/* Backward Icon */}
       <IconButton
         icon={<ChevronLeftIcon />}
         aria-label="Back"
@@ -52,36 +48,41 @@ const DetailsPage: React.FC = () => {
         bg="transparent"
         onClick={goBack}
       />
+       <TopNav title={pageContent.title}/>
+      <RoundsBtn />
 
-      <Flex>
-        {/* Left Section */}
+      <Flex   direction={{base: 'column', md: 'row'}} alignItems={'center'}>
         <Box
-          width="600px"
-          height="300px"
+          width={{base: '90%', md: '600px'}}
+          height="auto"
           bg="white"
           boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
           borderRadius="10px"
           display="flex"
           alignItems="center"
-          mr={4}
+          mb={{ base: 4, md: 0 }}
+          mr={{ base: 0, md: 4 }}
+          flexDirection={{ base: "column", md: "row" }}
+          p={10}
         >
           <Box
-            width="200px"
-            height="200px"
+            width={{ base: "150px", md: "200px" }}
+            height={{ base: "150px", md: "200px" }}
             borderRadius="50%"
             bg="#ffffff"
-            mx={10}
+            my={{ base: 4, md: 0 }}
+            mx={{ base: "auto", md: 10 }}
             display="flex"
             alignItems="center"
             justifyContent="center"
             boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
           >
-            <Text fontSize="3xl" fontWeight="bold" color="#2FD790">
+            <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="#2FD790">
               23/50
             </Text>
           </Box>
 
-          <Flex direction="column" justify="center">
+          <Flex direction="column" justify="center" px={{ base: 4, md: 0 }}>
             <Box mb={4} display={"flex"} justifyContent={"space-between"} gap={4}>
               <Text>Test</Text>
               <Text>Round 1</Text>
@@ -93,7 +94,7 @@ const DetailsPage: React.FC = () => {
               </Flex>
               <Flex justify="space-between" mb={2}>
                 <Text color={"#757575"}>Correct Answers</Text>
-                <Text fontWeight={"bold"}> 2</Text>
+                <Text fontWeight="bold"> 2</Text>
               </Flex>
               <Flex justify="space-between" mb={2}>
                 <Text color={"#757575"}>Wrong Answers</Text>
