@@ -21,6 +21,12 @@ import {
     ViewIcon,
     ViewOffIcon,   
   } from "@chakra-ui/icons";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { toast } from "sonner";
+import myAxios from "@/lib/myAxios";
+import { SERVER_URL } from "@/lib/constants";
+import { login } from "@/redux/slices/auth/authSlice";
+import { useRouter } from "next/navigation";
 
 
 const LoginPage: React.FC = () => {
@@ -31,6 +37,61 @@ const LoginPage: React.FC = () => {
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
       };
+      const [adminDetails, setAdminDetails] = useState({
+        email: "",
+        password: ""
+      })
+    const [warningState, setWarningState] = useState(false)
+    const [errorState, setErrorState] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const dispatch = useAppDispatch()
+    const router = useRouter()
+    const { redirect } = useAppSelector(state=>state.auth)    
+
+    const handleUserDetailsChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setAdminDetails({
+        ...adminDetails,
+        [e.target.name]: e.target.value
+    })
+    }
+    
+    const loginAction = async (e: React.FormEvent) =>{
+    e.preventDefault()
+    setLoading(true)
+    if((!adminDetails.email) || !adminDetails.password){
+        toast.message("All fields with * are required")
+        setWarningState(true)
+        setLoading(false)
+        return 0
+    }
+    if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(adminDetails.email))){
+        toast.message("Invalid Email")
+        setWarningState(true)
+        setLoading(false)
+        return 0
+    }
+    
+    const admin = {
+        ...adminDetails,
+        email: adminDetails.email.toLocaleLowerCase(),
+    }
+    myAxios
+        .post(`${SERVER_URL}/api/auth/login`, admin)
+        .then((response)=>{
+        toast.success(response.data?.message)
+        dispatch(login(response.data))
+        setLoading(false)
+        router.push("/my-account")
+        })
+        .catch(error => {
+        toast.error(error.response?.data?.message || error.message)
+        setLoading(false)
+        setErrorState(true)
+        })
+
+
+        // dispactch(logOut())
+    }
     
 
   return (
@@ -75,7 +136,6 @@ const LoginPage: React.FC = () => {
           </Box>
 
           <Box py={6} mb={6}>
-           
 
           <FormControl data-aos="fade-up" data-aos-duration="2000">
               <FormLabel>Email address</FormLabel>
@@ -84,10 +144,12 @@ const LoginPage: React.FC = () => {
                   type="text"
                   borderColor="#808080"
                   borderRadius="12px"
-                  color="white"
                   fontSize={"16px"}
                   placeholder="Type here"
                   fontFamily="Poppins"
+                  name="email"
+                  onChange={handleUserDetailsChange}
+                  value={adminDetails.email}
                 />
                
               </InputGroup>
@@ -108,6 +170,9 @@ const LoginPage: React.FC = () => {
                   fontSize={"16px"}
                   placeholder="Type here"
                   borderRadius="12px"
+                  name="password"
+                  onChange={handleUserDetailsChange}
+                  value={adminDetails.password}
                 />
                 <InputRightElement width="4.5rem">
                   <Button
@@ -138,6 +203,8 @@ const LoginPage: React.FC = () => {
               color="white"
               _hover={{ opacity: 1 }}
               zIndex={100}
+              isLoading={loading}
+              onClick={loginAction}
             >
             Log In
           </Button>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Providers from "@/components/myProviders";
+import { Providers } from "@/redux/Providers";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
