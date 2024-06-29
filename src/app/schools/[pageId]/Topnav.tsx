@@ -30,10 +30,11 @@ const HeaderContent: React.FC<{ title: string }> = ({ title }) => {
     <Box >
       <Flex
         justifyContent={"space-between"}
-        mb="4"
+      
         textAlign={"right"}
         position="fixed"
         right="0rem"
+        top={'0rem'}
         zIndex="1000"
         w={{base: '95%', md: '80%'}}
         bg={'#ffffff'}

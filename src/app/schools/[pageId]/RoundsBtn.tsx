@@ -27,9 +27,9 @@ const HeaderSection: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box mb={10}  mt={'20'}>
      
-      <Box px={8} mt={20}>
+      <Box px={8}>
         <Text fontSize={"16px"} color={"#333333"}>
           Test Details
         </Text>
@@ -48,7 +48,7 @@ const HeaderSection: React.FC = () => {
             ))}
           </Flex>
 
-          <Box textAlign={"center"} fontFamily={"Poppins"}>
+          {/* <Box textAlign={"center"} fontFamily={"Poppins"}>
             <Button
               leftIcon={<Box as={FaEdit} color="#333333" />}
               rightIcon={<Box as={FaPlus} color="#333333" />}
@@ -63,7 +63,7 @@ const HeaderSection: React.FC = () => {
             >
               Edit / Add
             </Button>
-          </Box>
+          </Box> */}
         </Flex>
       </Box>
     </Box>
