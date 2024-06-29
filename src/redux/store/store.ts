@@ -3,12 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import thunk, { ThunkAction } from "redux-thunk";
 import { Action, combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../slices/auth/authSlice"
-import medicineReducer from "../slices/medicine/medicineSlice"
-import prescriptionReducer from "../slices/prescrption/prescriptionSlice"
-import orderReducer from "../slices/order/orderSlice";
-import testReducer from "../slices/tests/testSlice";
-import doctorReducer from "../slices/doctor/doctorSlice";
-import consultationReducer from "../slices/consultation/consultationSlice";
+import quizReducer from "../slices/quiz/quizSlice";
 
 const persistConfig = {
     key: "root",
@@ -16,14 +11,16 @@ const persistConfig = {
     whitelist: ['auth']
 }
 
+
+const quizPersistConfig = {
+    key: 'quiz',
+    storage,
+    whitelist: ['quiz']
+}
+
 const rootReducer = combineReducers({
     auth: authReducer,
-    medicine: medicineReducer,
-    prescription: prescriptionReducer,
-    order: orderReducer,
-    test: testReducer,
-    doctor: doctorReducer,
-    consultation: consultationReducer,
+    quiz: persistReducer(quizPersistConfig, quizReducer)
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

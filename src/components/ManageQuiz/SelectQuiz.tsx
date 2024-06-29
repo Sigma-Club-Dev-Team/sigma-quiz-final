@@ -1,11 +1,22 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Box, Button, Flex, Heading, Link, Menu, MenuButton, MenuItem, MenuList, Text, VStack } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AddQuizTrigger from './AddQuiz'
 import Quizzes from './Quizzes'
 import { ContainImage } from '../myImage'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { getQuizzes } from '@/redux/slices/quiz/quizSlice'
 
 function SelectQuiz() {
+  const [quizId, setQuizId] = useState('')
+  const { quizzes, quiz } = useAppSelector(state => state.quiz)
+  const dispatch = useAppDispatch()
+
+  useEffect(()=>{
+    dispatch(getQuizzes())
+  }, [])
+
+
   return (
     <Flex alignItems={'center'} justifyContent={'center'} bg={'white'} p={{base: '.5rem', md: '1rem', lg: '2rem'}}>
       <Flex
@@ -22,7 +33,7 @@ function SelectQuiz() {
           {/* Header */}
           <Box  width={'100%'}>
             <Box position={'relative'} height={'3.75rem'} width={'11.5625rem'}>
-              <ContainImage src="/assets/images/svgs/sigmaLogo.svg" alt='Since 1950' />
+              <ContainImage src="/assets/svgs/sigmaLogo.svg" alt='Since 1950' />
             </Box>
           </Box>
 
@@ -55,11 +66,9 @@ function SelectQuiz() {
                     Select a quiz
                   </MenuButton>
                   <MenuList>
-                    <MenuItem>2024 Roseline Etuokwu Quiz Competition</MenuItem>
-                    <MenuItem>2023 Roseline Etuokwu Quiz Competition</MenuItem>
-                    <MenuItem>2022 Roseline Etuokwu Quiz Competition</MenuItem>
-                    <MenuItem>2021 Roseline Etuokwu Quiz Competition</MenuItem>
-                    <MenuItem>2020 Roseline Etuokwu Quiz Competition</MenuItem>
+                    {quizzes.map((quiz, index) => (
+                      <MenuItem onClick={()=>setQuizId(quiz.id)} key={index}>{quiz.title}</MenuItem>
+                    ))}
                   </MenuList>
                 </Menu>
               </Box>

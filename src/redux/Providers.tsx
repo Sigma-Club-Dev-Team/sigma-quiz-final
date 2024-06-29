@@ -7,16 +7,19 @@ import { Suspense } from "react";
 import { injectStore } from "@/api";
 import Preloader from "@/components/UI/Preloader";
 import { Toaster } from "sonner";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import appTheme from "@/theme";
 
 injectStore(store)
 
 export function Providers({ children }: { children: React.ReactNode }) {
 
+    const chakraTheme = extendTheme(appTheme);
+
   return (
     <Provider store={store}>
         <PersistGate loading={<Preloader />} persistor={persistor}>
-            <ChakraProvider>
+            <ChakraProvider theme={chakraTheme}>
                 <Toaster richColors position="bottom-right" />
                 {children}
             </ChakraProvider>

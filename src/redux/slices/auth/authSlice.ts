@@ -6,7 +6,9 @@ export interface IAuth {
     superAdminInfo: {
         id: number,
         email: string,
-        type: string,
+        roles: string[],
+        first_name: string,
+        last_name: string,
         createdAt: string,
         updatedAt: string,
 
@@ -40,9 +42,9 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login(state, action){
-            state.superAdminInfo = action.payload.data.value,
+            state.superAdminInfo = action.payload.user,
             state.isLoggedIn = true,
-            state.token = action.payload.token
+            state.token = action.payload.access_token
         },
         addAuthenticatedSuperAdminInfo(state, action){
             state.superAdminInfo = action.payload.data.user,

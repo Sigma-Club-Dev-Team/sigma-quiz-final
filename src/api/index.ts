@@ -11,7 +11,7 @@ export const injectStore = (_store : any) => {
 class Api {
   baseURL: string;
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_BASE_URL as string;
+    this.baseURL = 'https://sigma-website-backend-51b4af465e71.herokuapp.com';
   }
 
   initializeInstance = () => {
@@ -66,6 +66,14 @@ class Api {
       data,
     });
   };
+
+  // quizzes
+
+
+  getAllQuizzes = () => {
+    const url = '/api/sigma-quiz'
+    return this.publicRequest(url, METHOD.GET, {})
+  }
 
   getCategories = () => {
     const url = '/inventory/categories'

@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Stack,
   Flex,
@@ -25,8 +25,16 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getQuizzes } from "@/redux/slices/quiz/quizSlice";
 
 function HeroSection() {
+
+  const { superAdminInfo, token } = useAppSelector(state => state.auth)
+  const { quizzes } = useAppSelector(state => state.quiz)
+  const dispatch = useAppDispatch()
+
+
   const buttonProps = {
     variant: "ghost",
     width: "7.5rem",
@@ -41,6 +49,10 @@ function HeroSection() {
       color: "white",
     },
   };
+
+  useEffect(()=>{
+    dispatch(getQuizzes())
+  }, [])
 
   return (
     <Flex
@@ -119,9 +131,9 @@ function HeroSection() {
             Select a quiz to view
           </MenuButton>
           <MenuList>
-            <MenuItem>Option 1</MenuItem>
-            <MenuItem>Option 2</MenuItem>
-            <MenuItem>Option 3</MenuItem>
+            {quizzes.map((quiz, index) => (
+              <MenuItem key={index}>{quiz.title}</MenuItem>
+            ))}
           </MenuList>
         </Menu>
       </Box>

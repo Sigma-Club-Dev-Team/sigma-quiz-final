@@ -78,10 +78,10 @@ const LoginPage: React.FC = () => {
     myAxios
         .post(`${SERVER_URL}/api/auth/login`, admin)
         .then((response)=>{
-        toast.success(response.data?.message)
+        toast.success("Login successful")
         dispatch(login(response.data))
         setLoading(false)
-        router.push("/my-account")
+        router.push("/")
         })
         .catch(error => {
         toast.error(error.response?.data?.message || error.message)
