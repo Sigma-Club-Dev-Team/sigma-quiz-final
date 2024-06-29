@@ -1,20 +1,14 @@
 import React from "react";
 import {
   Box,
-  Heading,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Button,
   Flex,
   Text,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import { FaEdit, FaPlus } from "react-icons/fa";
 
-const HeaderSection: React.FC<{ title: string }> = ({ title }) => {
+
+const HeaderSection: React.FC = () => {
   const buttonProps = {
     fontFamily: "Poppins",
     fontSize: "14px",
@@ -33,36 +27,14 @@ const HeaderSection: React.FC<{ title: string }> = ({ title }) => {
   ];
 
   return (
-    <Box py={4}>
-      <Flex justify="flex-end" align="center" mb="4">
-        <Heading as="h3" size="sm" mr="4">
-          {title} ,Sango Otta
-        </Heading>
-        <Menu>
-          <Box>
-            <Text fontWeight={"500"}>Welcome Jennifer</Text>
-          </Box>
-          <MenuButton
-            as={Button}
-            variant="ghost"
-            rightIcon={<ChevronDownIcon />}
-          >
-            <Avatar name="School Name" size="md" />
-          </MenuButton>
-          <MenuList>
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>Settings</MenuItem>
-            <MenuItem>Logout</MenuItem>
-          </MenuList>
-        </Menu>
-      </Flex>
-
-      <Box px={8}>
+    <Box>
+     
+      <Box px={8} mt={20}>
         <Text fontSize={"16px"} color={"#333333"}>
           Test Details
         </Text>
-        <Flex justify={"space-between"}>
-          <Flex py={4}>
+        <Flex justify={"space-between"} flexWrap={'wrap'}>
+          <Flex py={4} flexWrap={'wrap'}>
             {buttonLabels.map((label, index) => (
               <Button
                 key={index}

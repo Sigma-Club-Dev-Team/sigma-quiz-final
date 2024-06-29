@@ -11,7 +11,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation"; 
 import { contentData } from "./content";
 import Sidebar from "../../../components/sidebar"; 
-import HeaderSection from "./TopMenu"; 
+import TopNav from './Topnav'
+import RoundsBtn from "./RoundsBtn"; 
 import QuestionsBTN from "./QuestionsButtons"; 
 import AnsweredButtons from "./AnsweredQuestnBtn"; 
 import ScoreBoard from "./ScoreBoard"; 
@@ -29,8 +30,9 @@ const TemplatePage: React.FC = () => {
   return (
     <Flex>
       <Sidebar />
-      <Box py={6} minW={"80%"} px={2} marginLeft={"20%"}>
-        <HeaderSection title={pageContent.title} />
+      <Box  minW={{base: '100%', md: '80%'}} px={0} marginLeft={{base: '0%', md: '20%'}}>
+        <TopNav title={pageContent.title} />
+        <RoundsBtn />
 
         <Box px={8} fontFamily={'Poppins'}>
           <Box py={4}>
@@ -59,7 +61,7 @@ const TemplatePage: React.FC = () => {
             <Text fontWeight={"500"} color={"#333333"}>
               Answered Questions
             </Text>
-            <Flex mt={4} justify={"space-between"}>
+            <Flex mt={4} justify={"space-between"}  direction={{base: 'column', md: 'row'}}>
               <AnsweredButtons />
               <Link href={`/schools/${pageContent.id}/test-details`} passHref>
                 <Button rightIcon={<ChevronRightIcon />}>

@@ -3,16 +3,16 @@ import { Button, Flex, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 interface AnsweredButtonsProps {
-  showNavigation?: boolean; // Prop to control whether to show navigation icons
+  showNavigation?: boolean; 
 }
 
 const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
   showNavigation = true,
 }) => {
-  const totalButtons = 20; // Total number of buttons available
-  const initialVisibleButtons = 10; // Number of buttons to initially display
+  const totalButtons = 20; 
+  const initialVisibleButtons = 10; 
 
-  const [startIndex, setStartIndex] = useState(0); // Start index of visible buttons
+  const [startIndex, setStartIndex] = useState(0); 
 
   // Calculate end index based on start index and number of buttons to show
   const endIndex = startIndex + initialVisibleButtons;

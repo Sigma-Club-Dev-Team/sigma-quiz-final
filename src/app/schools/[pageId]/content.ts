@@ -8,7 +8,7 @@ interface ContentData {
 export const contentData: ContentData[] = [
   {
     id: "ambassadors",
-    title: "Ambassadors",
+    title: "Ambassadors College",
     description: "This is the description for Ambassadors."
   },
   {
