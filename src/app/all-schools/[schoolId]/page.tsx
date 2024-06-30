@@ -63,8 +63,7 @@ const SchoolDetailsPage: React.FC = () => {
         testName="General knowledge quiz"
         position='2nd'
         score={5}
-        answeredQuestions={[]} 
-      />
+        answeredQuestions={[]} corrects={[]} wrongs={[]}      />
     </Box>
   );
 };

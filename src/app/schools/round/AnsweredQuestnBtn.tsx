@@ -34,17 +34,7 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
 
   return (
     <Flex wrap="wrap" justify="center" align="center" alignItems="center">
-      {showNavigation && (
-        <IconButton
-          aria-label="Backward"
-          icon={<ChevronLeftIcon />}
-          variant="ghost"
-          size="md"
-          ml={2}
-          onClick={handlePrevClick}
-          disabled={startIndex === 0}
-        />
-      )}
+    
       {questions
         .toSorted((a, b) => a.question_number - b.question_number)
         .map((question) => {
@@ -65,17 +55,7 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
             </Box>
           );
         })}
-      {showNavigation && (
-        <IconButton
-          aria-label="Forward"
-          icon={<ChevronRightIcon />}
-          variant="ghost"
-          size="md"
-          mr={2}
-          onClick={handleNextClick}
-          disabled={endIndex >= totalButtons}
-        />
-      )}
+     
     </Flex>
   );
 };
