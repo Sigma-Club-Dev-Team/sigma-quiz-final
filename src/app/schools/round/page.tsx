@@ -15,6 +15,7 @@ import {
   SchoolRoundParticipation,
 } from "@/redux/slices/quiz/quizSlice";
 import QuestionInfoSection from "./QuestionInfoSection";
+import Preloader from "@/components/UI/Preloader";
 
 const RoundPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +39,7 @@ const RoundPage: React.FC = () => {
 
   const roundParticipations = useMemo(() => {
     selectedRound?.score;
-    if (roundsMap) {
+    if (roundsMap.size > 0) {
       return (schoolRegistration?.rounds ?? []).toSorted((a, b) => {
         const bRound = roundsMap.get(b.roundId)!;
         const aRound = roundsMap.get(a.roundId)!;
@@ -54,6 +55,8 @@ const RoundPage: React.FC = () => {
       setSelectedRound(roundParticipations[0]);
     }
   }, [roundParticipations]);
+
+  if (quizzesLoading) return <Preloader />;
 
   return (
     <Flex>
@@ -95,15 +98,15 @@ const RoundPage: React.FC = () => {
             </Box>
           )}
         </Box>
-        {schoolRegistration && selectedRound && ( 
-        <ScoreBoard
-          quizScore={schoolRegistration?.score}
-          roundScore={selectedRound?.score}
-          answeredQuestions={selectedRound?.answered_questions}
-          quizRounds={schoolRegistration?.rounds}
-          position={schoolRegistration?.position}
-        />
-      )}
+        {schoolRegistration && selectedRound && (
+          <ScoreBoard
+            quizScore={schoolRegistration?.score}
+            roundScore={selectedRound?.score}
+            answeredQuestions={selectedRound?.answered_questions}
+            quizRounds={schoolRegistration?.rounds}
+            position={schoolRegistration?.position}
+          />
+        )}
       </Box>
     </Flex>
   );

@@ -15,7 +15,7 @@ const persistConfig = {
 const quizPersistConfig = {
     key: 'quiz',
     storage,
-    whitelist: ['quiz']
+    whitelist: ['quiz', 'schoolRegistration']
 }
 
 const rootReducer = combineReducers({
