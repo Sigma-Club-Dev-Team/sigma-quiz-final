@@ -10,7 +10,7 @@ import { Round } from "@/redux/slices/quiz/quizSlice";
 
 const AllSchoolsRoundsSelector = ({onRoundSelected, selectedRound, rounds}: {
   rounds: Round[],
-  onRoundSelected: (newRound: Round)=> void, selectedRound: Round | null}) => {
+  onRoundSelected: (newRound: Round | null)=> void, selectedRound: Round | null}) => {
 
   const buttonProps = {
     fontFamily: "Poppins",
@@ -41,6 +41,15 @@ const AllSchoolsRoundsSelector = ({onRoundSelected, selectedRound, rounds}: {
                 {round.name}
               </Button>
             })}
+             <Button
+                {...buttonProps}
+                bg={ !selectedRound ? "#8F19E7" : "transparent"}
+                color={!selectedRound ? "white" : "black"}
+                _hover={{ bg: !selectedRound ? "blue.600" : "gray.100" }}
+                onClick={()=>onRoundSelected(null)}
+              >
+                {'Overall'}
+              </Button>
           </Flex>
         </Flex>
       </Box>
