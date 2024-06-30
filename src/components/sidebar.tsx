@@ -31,18 +31,13 @@ import {
 } from "react-icons/fa";
 import { contentData } from "../app/schools/round/content";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  IQuizDetail,
-  School,
-  SchoolRegistrationElement,
-  setSchoolRegistration,
-} from "@/redux/slices/quiz/quizSlice";
+import { IQuizDetail, School, SchoolRegistrationElement, setSchoolRegistration } from "@/redux/slices/quiz/quizSlice";
 import { useRouter } from "next/navigation";
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { quizDetails, schoolRegistration } = useAppSelector(
@@ -50,9 +45,12 @@ const Sidebar: React.FC = () => {
   );
 
   const handleSetSchool = (school: SchoolRegistrationElement) => {
-    router.push("/schools/round");
-    dispatch(setSchoolRegistration(school));
-  };
+    console.log(pathname)
+    dispatch(setSchoolRegistration(school))
+    if(pathname === '/all-schools'){
+      router.push('/schools/round')
+    }
+  }
 
   return (
     <>
@@ -125,7 +123,7 @@ const SidebarContent: React.FC<{
       <HStack cursor="pointer" spacing={4} px={8}>
         <FaGraduationCap color="#333333" size="1.5rem" />
         <Text fontSize="xl" fontWeight="bold" color="#333333">
-          Schools
+          {quizDetails.title}
         </Text>
       </HStack>
 
@@ -141,19 +139,11 @@ const SidebarContent: React.FC<{
             py={2}
             borderLeft="5px solid"
             borderColor={
-              schoolRegistration?.schoolId === registration.schoolId
-                ? "#8F19E7"
-                : "transparent"
+              pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
             }
             shadow={"md"}
           >
-            <Text
-              color={
-                schoolRegistration?.schoolId === registration.schoolId
-                  ? "#8F19E7"
-                  : "#000000"
-              }
-            >
+            <Text color={pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
               {registration.school.name}
             </Text>
           </HStack>
