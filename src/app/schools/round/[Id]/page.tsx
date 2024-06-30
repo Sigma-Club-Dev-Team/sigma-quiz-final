@@ -19,7 +19,7 @@ import {
 } from "@/lib/utilityFunctions";
 import AnsweredButtons from "../AnsweredQuestnBtn";
 
-const SchoolDetailsPage: React.FC = () => {
+const SchoolDetailsPage = () => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const schoolregistrationID = pathname.split("/").pop();
