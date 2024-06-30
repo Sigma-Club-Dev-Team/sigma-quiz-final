@@ -1,11 +1,12 @@
+import { IQuiz } from "@/redux/slices/quiz/quizSlice"
 import { Box, Button, Flex, FormControl, FormLabel, Grid, GridItem, Input, InputGroup, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import React from "react"
 
-function EditQuizTrigger() {
+function EditQuizTrigger({quiz} : {quiz: IQuiz}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
       <>
-        <Box cursor={'pointer'} bg={'brand.bgGrey'} onClick={onOpen} padding={'1rem'}>2024 Roseline Etuokwu Quiz Competition</Box>
+        <Box cursor={'pointer'} bg={'brand.bgGrey'} onClick={onOpen} padding={'1rem'}>{quiz.title}</Box>
 
         {/* Quizzes Modal */}
         <Modal isOpen={isOpen} onClose={onClose} size={'3xl'}>

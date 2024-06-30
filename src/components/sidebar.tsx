@@ -29,14 +29,20 @@ import {
   FaPlus,
   FaBars,
 } from "react-icons/fa";
-import { contentData } from "../app/schools/[pageId]/content";
-import { useAppSelector } from "@/redux/hooks";
+import { contentData } from "../app/schools/round/content";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { IQuizDetail, School, SchoolRegistrationElement, setSchoolRegistration } from "@/redux/slices/quiz/quizSlice";
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure();
 
- 
+  const { quizDetails, schoolRegistration } = useAppSelector(state => state.quiz)
+  
+  const handleSetSchool = (school: SchoolRegistrationElement) => {
+    dispatch(setSchoolRegistration(school))
+  }
 
   return (
     <>
@@ -63,7 +69,7 @@ const Sidebar: React.FC = () => {
         top={"0"}
         display={{ base: "none", md: "block" }}
       >
-        <SidebarContent pathname={pathname} />
+        {quizDetails && <SidebarContent schoolRegistration={schoolRegistration} handleSetSchool={handleSetSchool} quizDetails={quizDetails} pathname={pathname} />}
       </Box>
 
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={'full'}>
@@ -72,7 +78,7 @@ const Sidebar: React.FC = () => {
           <DrawerCloseButton />
           <DrawerHeader>{''}</DrawerHeader>
           <DrawerBody>
-            <SidebarContent pathname={pathname} />
+            {quizDetails && <SidebarContent schoolRegistration={schoolRegistration} handleSetSchool={handleSetSchool} quizDetails={quizDetails} pathname={pathname} />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
@@ -80,7 +86,7 @@ const Sidebar: React.FC = () => {
   );
 };
 
-const SidebarContent: React.FC<{ pathname: string }> = ({ pathname }) => {
+const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, handleSetSchool: (school: SchoolRegistrationElement) => void, schoolRegistration: SchoolRegistrationElement | null }> = ({ pathname, quizDetails, handleSetSchool, schoolRegistration }) => {
   const { token, superAdminInfo, isLoggedIn } = useAppSelector(state => state.auth)
   
   return (
@@ -92,28 +98,28 @@ const SidebarContent: React.FC<{ pathname: string }> = ({ pathname }) => {
         </Text>
       </HStack>
 
-      <VStack align="stretch" spacing={4}>
-        {contentData.map((school) => (
-          <Link key={school.id} href={`/schools/${school.id}`}>
-            <HStack
-              cursor="pointer"
-              spacing={4}
-              bg={"#ffffff"}
-              px={8}
-              py={2}
-              borderLeft="5px solid"
-              borderColor={
-                pathname === `/schools/${school.id}` ? "#8F19E7" : "transparent"
-              }
-              shadow={"md"}
-            >
-              <Text color={pathname === `/schools/${school.id}` ? "#8F19E7" : "#000000"}>
-                {school.title}
-              </Text>
-            </HStack>
-          </Link>
-        ))}
-      </VStack>
+    <VStack align="stretch" spacing={4}>
+      {quizDetails.schoolRegistrations.map((registration, index) => (
+          <HStack
+            key={index}
+            cursor="pointer"
+            spacing={4}
+            bg={"#ffffff"}
+            onClick={()=>handleSetSchool(registration)}
+            px={8}
+            py={2}
+            borderLeft="5px solid"
+            borderColor={
+              schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
+            }
+            shadow={"md"}
+          >
+            <Text color={schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
+              {registration.school.name}
+            </Text>
+          </HStack>
+      ))}
+    </VStack>
 
       <Box textAlign={"center"}>
         <Button

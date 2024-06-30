@@ -1,11 +1,86 @@
 import { PaginationPayload } from "@/types";
 import { createSlice, AnyAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { IPharmacy, IProductVariation } from "../medicine/medicineSlice";
-import { updateObjectInArray } from "@/lib/utilityFunctions";
-import { IDoctor } from "../doctor/doctorSlice";
-import { ITest } from "../tests/testSlice";
 import quizService from "./quizService";
+
+export interface IQuizDetail {
+    id:                  string;
+    year:                number;
+    title:               string;
+    description:         null;
+    date:                Date;
+    rounds:              Round[];
+    schoolRegistrations: SchoolRegistrationElement[];
+}
+
+export interface Round {
+    id:                       string;
+    quizId:                   string;
+    name:                     string;
+    round_number:             number;
+    no_of_questions:          number;
+    no_of_schools:            number;
+    marks_per_question:       number;
+    marks_per_bonus_question: number;
+    schoolParticipations:     SchoolRoundParticipation[];
+    questions:                Question[];
+}
+
+export interface Question {
+    id:                 string;
+    roundId:            string;
+    question_number:    number;
+    answered_by:        AnsweredBy | null;
+    answered_correctly: boolean | null;
+    bonus_to:           AnsweredBy | null;
+}
+
+export interface AnsweredBySchoolRegistration {
+    id:       string;
+    quizId:   string;
+    schoolId: string;
+    quiz:     IQuiz;
+    school:   School;
+    rounds:   AnsweredBy[];
+    score:    number;
+    position: number;
+}
+
+export interface AnsweredBy {
+    id:                   string;
+    roundId:              string;
+    schoolRegistrationId: string;
+    schoolRegistration?:  AnsweredBySchoolRegistration;
+    score:                number;
+    position:             number;
+}
+export interface School {
+    id:      string;
+    name:    string;
+    state:   string;
+    address: string;
+}
+
+export interface SchoolRoundParticipation {
+    id:                   string;
+    roundId:              string;
+    schoolRegistrationId: string;
+    score:                number;
+    position:             number;
+    answered_questions:   Question[];
+    bonus_questions:      Question[];
+}
+
+export interface SchoolRegistrationElement {
+    id:       string;
+    quizId:   string;
+    schoolId: string;
+    quiz:     IQuiz;
+    school:   School;
+    rounds:   SchoolRoundParticipation[];
+    score:    number;
+    position: number;
+}
 
 export interface IQuiz {
     id: string,
@@ -15,20 +90,20 @@ export interface IQuiz {
     date: string
 }
 
-export interface Question {
-    answered_correctly: boolean
-}
-
 type QuizState = {
     quizzes: IQuiz[],
     quiz: IQuiz | null,
+    quizDetails: IQuizDetail | null,
     quizzesLoading: boolean,
+    schoolRegistration: SchoolRegistrationElement | null,
 }
 
 const initialState = {
     quizzes: [],
     quiz: null,
-    quizzesLoading: false
+    quizzesLoading: false,
+    quizDetails: null,
+    schoolRegistration: null
 } as QuizState
 
 export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: undefined, thunkAPI) => {
@@ -39,16 +114,26 @@ export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: und
     }
 })
 
+export const getQuizDetails = createAsyncThunk('quiz/getQuizDetails', async(payload: string, thunkAPI) => {
+    try{
+        return await quizService.fetchQuizDetails(payload)
+    }catch(err){
+        return thunkAPI.rejectWithValue("Something went wrong")
+    }
+})
+
 const quizSlice = createSlice({
     name: 'quiz',
     initialState,
     reducers: {
-        // updateConsultations(state, action){
-        //     const {payload} = action
-        //     console.log({payload})
-        //     const newArray = updateObjectInArray(state.consultations, payload.consultation)
-        //     state.consultations = newArray
-        // }
+        setQuiz(state, action){
+            const {payload} = action
+            state.quiz = payload
+        },
+        setSchoolRegistration(state, action){
+            const {payload} = action
+            state.schoolRegistration = payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action: AnyAction)=>{
@@ -67,9 +152,19 @@ const quizSlice = createSlice({
         .addCase(getQuizzes.rejected, (state)=>{
             state.quizzesLoading = false;
         })
+        .addCase(getQuizDetails.pending, (state)=>{
+            state.quizzesLoading = true
+        })
+        .addCase(getQuizDetails.fulfilled, (state, action)=>{
+            state.quizzesLoading = false;
+            state.quizDetails = action.payload ?? null
+        })
+        .addCase(getQuizDetails.rejected, (state)=>{
+            state.quizzesLoading = false;
+        })
     }
 })
 
-export const {  } = quizSlice.actions
+export const { setQuiz, setSchoolRegistration } = quizSlice.actions
 const quizReducer = quizSlice.reducer
 export default quizReducer

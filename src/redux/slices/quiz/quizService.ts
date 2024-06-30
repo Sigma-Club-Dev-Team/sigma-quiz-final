@@ -6,8 +6,13 @@ const fetchAllQuizzes = async() => {
     return response.data
 }
 
+const fetchQuizDetails = async(payload: string) => {
+    const response = await api.getQuizDetails(payload)
+    return response.data
+}
+
 const quizService = {
-    fetchAllQuizzes
+    fetchAllQuizzes, fetchQuizDetails
 }
 
 export default quizService

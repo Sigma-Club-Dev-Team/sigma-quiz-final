@@ -75,6 +75,11 @@ class Api {
     return this.publicRequest(url, METHOD.GET, {})
   }
 
+  getQuizDetails = (quizId: string) => {
+    const url = `/api/sigma-quiz/${quizId}/results`
+    return this.publicRequest(url, METHOD.GET, {})
+  }
+
   getCategories = () => {
     const url = '/inventory/categories'
     return this.publicRequest(url, METHOD.GET, {})

@@ -25,8 +25,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useAppSelector } from "@/redux/hooks";
 import SidebarContent from "../../../components/sidebar";
 
-
-const HeaderContent: React.FC<{ title: string }> = ({ title }) => {
+const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { token, superAdminInfo, isLoggedIn } = useAppSelector(state => state.auth)
 
@@ -48,8 +47,9 @@ const HeaderContent: React.FC<{ title: string }> = ({ title }) => {
               {title}
             </Heading>
             <Text fontWeight="400" fontSize="12px">
+              
               {isLoggedIn ? (
-                <Text>Welcome Jeniifer</Text>
+                <Text>Welcome {superAdminInfo?.first_name}</Text>
               ) : (
                 <Link href="/sign-in">
                   <Text
