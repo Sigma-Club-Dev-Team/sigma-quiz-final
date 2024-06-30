@@ -98,15 +98,15 @@ const RoundPage: React.FC = () => {
             </Box>
           )}
         </Box>
-        {/* {schoolRegistration && selectedRound && (
-        )} */}
-        <ScoreBoard
-          quizScore={schoolRegistration?.score}
-          roundScore={selectedRound?.score}
-          answeredQuestions={selectedRound?.answered_questions}
-          quizRounds={schoolRegistration?.rounds}
-          position={schoolRegistration?.position}
-        />
+        {schoolRegistration && selectedRound && (
+          <ScoreBoard
+            quizRounds={schoolRegistration?.rounds}
+            roundScore={selectedRound?.score}
+            quizScore={schoolRegistration?.score}
+            answeredQuestions={selectedRound?.answered_questions}
+            position={schoolRegistration?.position}
+          />
+        )}
       </Box>
     </Flex>
   );
