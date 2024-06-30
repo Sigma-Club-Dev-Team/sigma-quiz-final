@@ -8,14 +8,17 @@ import TopNav from '../Topnav';
 import SchoolResultSummary from '../../../all-schools/SchoolResutSummary';
 import RoundsSelector from '../../round/RoundsSelector';
 import AnsweredButtons from '../AnsweredQuestnBtn';
+import AllSchoolsRoundsSelector from '@/app/all-schools/RoundsSelector';
+import { getAllAnsweredQuestions, getAllRightAnsweredQuestions, getAllWrongAnsweredQuestions } from '@/lib/utilityFunctions';
 
-const SchoolDetailsPage: React.FC = () => {
+const SchoolDetailsPage = ({ params }: { params: { id: string } }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+  const { id } = params
   const schoolregistrationID = pathname.split('/').pop();
   const { quizDetails, quiz } = useAppSelector((state) => state.quiz);
   const [schoolData, setSchoolData] = useState<SchoolRegistrationElement | null>(null);
-  const [selectedRound, setSelectedRound] = useState<SchoolRoundParticipation | null>(null);
+  const [selectedRound, setSelectedRound] = useState<Round | null>(null);
 
   useEffect(() => {
     if (quiz && !quizDetails) {
@@ -37,10 +40,6 @@ const SchoolDetailsPage: React.FC = () => {
     }
   }, [schoolregistrationID, quizDetails?.schoolRegistrations]);
 
-  const handleRoundSelected = (newRound: SchoolRoundParticipation) => {
-    setSelectedRound(newRound);
-  };
-
   const roundsMap = useMemo(() => {
     const map = new Map<string, Round>();
     quizDetails?.rounds.forEach(round => {
@@ -55,29 +54,39 @@ const SchoolDetailsPage: React.FC = () => {
 
   const roundSummary = selectedRound || schoolData.rounds;
 
+  const schoolRoundParticipation = selectedRound?.schoolParticipations.filter((participation) => participation.schoolRegistrationId === id)[0]
+
+  const registration = quizDetails?.schoolRegistrations.filter(reg => reg.id === id)[0]
+  console.log({registration, schoolRoundParticipation, id})
+
   return (
     <Box p={8}>
       <TopNav title={schoolData.school.name} />
-      <RoundsSelector
+      {quizDetails && <AllSchoolsRoundsSelector
         selectedRound={selectedRound}
-        roundsMap={roundsMap}
-        roundParticipations={schoolData.rounds}
-        onRoundSelected={handleRoundSelected}
-      />
+        rounds={quizDetails?.rounds}
+        onRoundSelected={(round) => setSelectedRound(round)}
+      />}
       {selectedRound ? (
         <SchoolResultSummary
-          testName="General knowledge quiz"
-          position={selectedRound.position.toString()}
-          score={selectedRound.score}
-          answeredQuestions={selectedRound.answered_questions}
+          testName={selectedRound.name}
+          position={`${schoolRoundParticipation?.position}`}
+          score={schoolRoundParticipation?.score! ?? 0}
+          corrects={schoolRoundParticipation?.answered_questions.filter((answeredQuestions) => answeredQuestions.answered_correctly)! ?? []}
+          wrongs={schoolRoundParticipation?.answered_questions.filter((answeredQuestions) => !answeredQuestions.answered_correctly)! ?? []}
+          answeredQuestions={schoolRoundParticipation?.answered_questions! ?? []}
         />
       ) : (
-        <SchoolResultSummary
-          testName="General knowledge quiz"
-          position={schoolData.position.toString()}
-          score={schoolData.score}
-          answeredQuestions={schoolData.rounds.flatMap(round => round.answered_questions)}
-        />
+        registration ? <SchoolResultSummary
+          testName={"Overall"}
+          position={`${registration?.position}`}
+          score={registration?.score}
+          corrects={getAllRightAnsweredQuestions(registration?.rounds)}
+          wrongs={getAllWrongAnsweredQuestions(registration?.rounds)}
+          answeredQuestions={
+            getAllAnsweredQuestions(registration?.rounds)
+          }
+        /> : 'School Registration not found'
       )}
 
      <VStack gap={2}>

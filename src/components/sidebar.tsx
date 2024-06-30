@@ -32,16 +32,22 @@ import {
 import { contentData } from "../app/schools/round/content";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { IQuizDetail, School, SchoolRegistrationElement, setSchoolRegistration } from "@/redux/slices/quiz/quizSlice";
+import { useRouter } from "next/navigation";
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { quizDetails, schoolRegistration } = useAppSelector(state => state.quiz)
   
   const handleSetSchool = (school: SchoolRegistrationElement) => {
+    console.log(pathname)
     dispatch(setSchoolRegistration(school))
+    if(pathname === '/all-schools'){
+      router.push('/schools/round')
+    }
   }
 
   return (
@@ -110,11 +116,11 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
             py={2}
             borderLeft="5px solid"
             borderColor={
-              schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
+              pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
             }
             shadow={"md"}
           >
-            <Text color={schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
+            <Text color={pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
               {registration.school.name}
             </Text>
           </HStack>
