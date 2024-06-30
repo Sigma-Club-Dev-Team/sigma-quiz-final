@@ -34,7 +34,7 @@ const QuestionsBTN = ({questions, selectedQuestion, onQuestionSelected}: {questi
             key={index}
             {...buttonProps}
             size="sm"
-            bg={ !!question.answered_by ? "#FF000033" : "transparent"}
+            bg={ isSelected ? '#8F19E7' : !!question.answered_by ? "#FF000033" : "transparent"}
             _focus={{
               bg: '#8F19E7',
             }}

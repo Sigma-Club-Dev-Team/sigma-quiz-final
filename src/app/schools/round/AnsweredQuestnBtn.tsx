@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  Button, Flex, IconButton, } from "@chakra-ui/react";
+import {  Box, Flex, IconButton, } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Question } from "@/redux/slices/quiz/quizSlice";
 
@@ -47,7 +47,7 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
       )}
       {questions.toSorted((a, b) => a.question_number - b.question_number).map((question) => {
         return (
-          <Button
+          <Box
             key={question.id}
             fontFamily="Poppins"
             fontSize="14px"
@@ -56,11 +56,11 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
             mr={2}
             mb={2}
             color="white"
-            size="md"
+            // size="
             bg={question.answered_correctly ? "#FF0000" : "#1FAF38"}
           >
             {question.question_number}
-          </Button>
+          </Box>
         );
       })}
       {showNavigation && (
