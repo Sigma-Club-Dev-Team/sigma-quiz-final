@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Text, Flex, Button, VStack } from '@chakra-ui/react';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/redux/hooks';
 import { SchoolRegistrationElement, Round, getQuizDetails, SchoolRoundParticipation } from '@/redux/slices/quiz/quizSlice';
 import TopNav from '../Topnav';
@@ -11,9 +11,10 @@ import AnsweredButtons from '../AnsweredQuestnBtn';
 import AllSchoolsRoundsSelector from '@/app/all-schools/RoundsSelector';
 import { getAllAnsweredQuestions, getAllRightAnsweredQuestions, getAllWrongAnsweredQuestions } from '@/lib/utilityFunctions';
 
-const SchoolDetailsPage = ({ params }: { params: { id: string } }) => {
+const SchoolDetailsPage = () => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+  const params = useParams()
   const { id } = params
   const schoolregistrationID = pathname.split('/').pop();
   const { quizDetails, quiz } = useAppSelector((state) => state.quiz);

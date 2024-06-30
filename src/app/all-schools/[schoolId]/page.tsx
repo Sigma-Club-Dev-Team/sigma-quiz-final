@@ -58,13 +58,13 @@ const SchoolDetailsPage: React.FC = () => {
       <TopNav title={school.title} />
     
       <AllSchoolsRoundsSelector selectedRound={selectedRound} rounds={quizDetails?.rounds ?? []} onRoundSelected={(round) => setSelectedRound(round)}/>
-      <SchoolResultSummary
+      {/* <SchoolResultSummary
       
         testName="General knowledge quiz"
         position='2nd'
         score={5}
         answeredQuestions={[]} 
-      />
+      /> */}
     </Box>
   );
 };
