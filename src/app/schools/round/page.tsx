@@ -21,7 +21,7 @@ const RoundPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { quizDetails, quizzesLoading, quiz, schoolRegistration } =
     useAppSelector((state) => state.quiz);
-  const { superAdminInfo, token } = useAppSelector((state) => state.auth);
+  const { superAdminInfo, token, isLoggedIn } = useAppSelector((state) => state.auth);
   const [selectedRound, setSelectedRound] =
     useState<SchoolRoundParticipation | null>(null);
 
@@ -55,6 +55,15 @@ const RoundPage: React.FC = () => {
       setSelectedRound(roundParticipations[0]);
     }
   }, [roundParticipations]);
+
+  useEffect(() => {
+    if (schoolRegistration) {
+     const updatedRound = schoolRegistration.rounds.find(round => round.id === selectedRound?.id);
+     if (updatedRound) {
+      setSelectedRound(updatedRound);
+     }
+    }
+  }, [schoolRegistration])
 
   if (quizzesLoading) return <Preloader />;
 
@@ -91,7 +100,7 @@ const RoundPage: React.FC = () => {
                 direction={{ base: "column", md: "row" }}
               >
                 <AnsweredButtons questions={selectedRound.answered_questions} />
-                <Link href={`/schools/round/test-details`} passHref>
+                <Link href={`/schools/round/${schoolRegistration?.id}`}>
                   <Button rightIcon={<ChevronRightIcon />}>View Details</Button>
                 </Link>
               </Flex>
