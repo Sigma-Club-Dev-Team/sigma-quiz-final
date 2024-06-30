@@ -48,6 +48,7 @@ const QuestionInfoSection = ({
         );
         const data:IQuizDetail = await response.json();
         if (data) {
+          console.log({data})
           dispatch(setQuizDetails(data))
           dispatch(setSchoolRegistration(data.schoolRegistrations.find(reg => reg.id === schoolRegistration?.id) ?? schoolRegistration))
         } else {

@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import React, { useState, useEffect, useMemo } from "react";
 import { Box, Text, Flex, Button, VStack, Heading } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
@@ -19,10 +20,24 @@ import {
   getAllRightAnsweredQuestions,
   getAllWrongAnsweredQuestions,
 } from "@/lib/utilityFunctions";
+=======
+import React, { useState, useEffect, useMemo } from 'react';
+import { Box, Text, Flex, Button, VStack } from '@chakra-ui/react';
+import { useParams, usePathname } from 'next/navigation';
+import { useAppSelector, useAppDispatch } from '@/redux/hooks';
+import { SchoolRegistrationElement, Round, getQuizDetails, SchoolRoundParticipation } from '@/redux/slices/quiz/quizSlice';
+import TopNav from '../Topnav';
+import SchoolResultSummary from '../../../all-schools/SchoolResutSummary';
+import RoundsSelector from '../../round/RoundsSelector';
+import AnsweredButtons from '../AnsweredQuestnBtn';
+import AllSchoolsRoundsSelector from '@/app/all-schools/RoundsSelector';
+import { getAllAnsweredQuestions, getAllRightAnsweredQuestions, getAllWrongAnsweredQuestions } from '@/lib/utilityFunctions';
+>>>>>>> b6312feea09c34aad53b74695d1a784f06f7aa91
 
-const SchoolDetailsPage = ({ params }: { params: { id: string } }) => {
+const SchoolDetailsPage = () => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+<<<<<<< HEAD
   const { id } = params;
   const schoolregistrationID = pathname.split("/").pop();
   const { quizDetails, quiz, schoolRegistration } = useAppSelector(
@@ -30,6 +45,13 @@ const SchoolDetailsPage = ({ params }: { params: { id: string } }) => {
   );
   const [schoolData, setSchoolData] =
     useState<SchoolRegistrationElement | null>(null);
+=======
+  const params = useParams()
+  const { id } = params
+  const schoolregistrationID = pathname.split('/').pop();
+  const { quizDetails, quiz } = useAppSelector((state) => state.quiz);
+  const [schoolData, setSchoolData] = useState<SchoolRegistrationElement | null>(null);
+>>>>>>> b6312feea09c34aad53b74695d1a784f06f7aa91
   const [selectedRound, setSelectedRound] = useState<Round | null>(null);
 
   useEffect(() => {
