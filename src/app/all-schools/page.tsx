@@ -73,7 +73,7 @@ const DetailsPage: React.FC = () => {
                     <Text fontSize="xl">{registration.school.name}</Text>
                   </Box>
                   <Box>
-                    <Link href={`/schools/${registration.id}/test-details`}>
+                    <Link href={`/schools/round/${registration.id}`}>
                       <Flex
                         alignItems="center"
                         color="blue.500"
