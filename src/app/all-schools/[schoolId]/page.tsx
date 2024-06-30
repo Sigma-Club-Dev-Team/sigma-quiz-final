@@ -1,22 +1,29 @@
 
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Box } from "@chakra-ui/react";
-import { contentData } from "../../schools/[pageId]/content";
+import { contentData } from "../../schools/round/content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import TopNav from "../../schools/[pageId]/Topnav";
-import RoundsBtn from "../../schools/[pageId]/RoundsBtn";
+import TopNav from "../../schools/round/Topnav";
 import  SchoolResultSummary  from "../../all-schools/SchoolResutSummary";
 import {
     IconButton
   } from "@chakra-ui/react";
+import { useAppSelector } from "@/redux/hooks";
+import { Round } from "@/redux/slices/quiz/quizSlice";
+import AllSchoolsRoundsSelector from "../RoundsSelector";
 
 
 
 const SchoolDetailsPage: React.FC = () => {
     const pathname = usePathname();
     const router = useRouter();
+    const { quizDetails } =
+    useAppSelector((state) => state.quiz);
+  const [selectedRound, setSelectedRound] =
+    useState<Round | null>(null);
+
   
     const parts = pathname.split("/");
     const schoolId = parts[2];
@@ -25,7 +32,6 @@ const SchoolDetailsPage: React.FC = () => {
         router.back();
       };
 
-  
   const school = contentData.find((school) => school.id === schoolId);
 
   if (!school) {
@@ -51,7 +57,7 @@ const SchoolDetailsPage: React.FC = () => {
 
       <TopNav title={school.title} />
     
-      <RoundsBtn />
+      <AllSchoolsRoundsSelector selectedRound={selectedRound} rounds={quizDetails?.rounds ?? []} onRoundSelected={(round) => setSelectedRound(round)}/>
       <SchoolResultSummary
       
         testName="General knowledge quiz"

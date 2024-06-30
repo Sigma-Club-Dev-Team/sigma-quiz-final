@@ -1,23 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Text,
   Flex,
   IconButton,
-  useBreakpointValue
 } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { contentData } from "../content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import TopNav from '../Topnav'
 import AnsweredButtons from "../AnsweredQuestnBtn";
-import RoundsBtn from '../RoundsBtn';
+import RoundsSelector from '../RoundsSelector';
+import { useAppSelector } from "@/redux/hooks";
+import { SchoolRoundParticipation } from "@/redux/slices/quiz/quizSlice";
 
 const DetailsPage: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
+
+  const { quizDetails, schoolRegistration } =
+  useAppSelector((state) => state.quiz);
+const [selectedRound, setSelectedRound] =
+  useState<SchoolRoundParticipation | null>(null);
+
+
+  const roundsMap = useMemo(() => {
+    return new Map(
+      (quizDetails?.rounds ?? [])?.map((round) => [round.id, round])
+    );
+  }, [quizDetails]);
+
+  const roundParticipations = useMemo(() => {
+    selectedRound?.score;
+    if (roundsMap) {
+      return (schoolRegistration?.rounds ?? []).toSorted((a, b) => {
+        const bRound = roundsMap.get(b.roundId)!;
+        const aRound = roundsMap.get(a.roundId)!;
+        return aRound.round_number - bRound.round_number;
+      });
+    } else {
+      return [];
+    }
+  }, [schoolRegistration, roundsMap]);
 
   const parts = pathname.split("/");
   const pageId = parts[2];
@@ -49,7 +75,12 @@ const DetailsPage: React.FC = () => {
         onClick={goBack}
       />
        <TopNav title={pageContent.title}/>
-      <RoundsBtn />
+       <RoundsSelector
+          roundsMap={roundsMap}
+          roundParticipations={roundParticipations}
+          selectedRound={selectedRound}
+          onRoundSelected={(round) => setSelectedRound(round)}
+        />
 
       <Flex   direction={{base: 'column', md: 'row'}} alignItems={'center'}>
         <Box
@@ -113,7 +144,7 @@ const DetailsPage: React.FC = () => {
         </Box>
 
         <Box>
-          <AnsweredButtons/>
+          <AnsweredButtons questions={[]}/>
          
         </Box>
       </Flex>
