@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect } from "react";
 import {
@@ -11,7 +11,7 @@ import {
   Image,
   HStack,
   Avatar,
-  Icon
+  Icon,
 } from "@chakra-ui/react";
 import { FaPlay } from "react-icons/fa";
 import {
@@ -29,11 +29,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getQuizzes } from "@/redux/slices/quiz/quizSlice";
 
 function HeroSection() {
-
-  const { superAdminInfo, token } = useAppSelector(state => state.auth)
-  const { quizzes } = useAppSelector(state => state.quiz)
-  const dispatch = useAppDispatch()
-
+  const { superAdminInfo, token } = useAppSelector((state) => state.auth);
+  const { quizzes } = useAppSelector((state) => state.quiz);
+  const dispatch = useAppDispatch();
 
   const buttonProps = {
     variant: "ghost",
@@ -50,15 +48,15 @@ function HeroSection() {
     },
   };
 
-  useEffect(()=>{
-    dispatch(getQuizzes())
-  }, [])
+  useEffect(() => {
+    dispatch(getQuizzes());
+  }, []);
 
   return (
     <Flex
       w={"full"}
-      h={{base: 'auto', md: '60.3rem'}}
-      backgroundImage={'/assets/pngs/GroupPicture.png'}
+      h={{ base: "auto", md: "60.3rem" }}
+      backgroundImage={"/assets/pngs/GroupPicture.png"}
       backgroundSize={"cover"}
       backgroundPosition={"center center"}
       fontFamily={"Poppins"}
@@ -69,11 +67,33 @@ function HeroSection() {
         ml={{ base: 2, md: 4 }}
         align="flex-start"
       >
-        <Box py={4}>
-        <Link href="/roseline-etuokwu/quiz-competition">
-          <Image src={'/assets/pngs/SigmaLogo.png'}   maxWidth={{ base: "150px", md: "200px", lg: "300px" }} />
-        </Link>
-        </Box>
+        <Stack
+          direction="row"
+          spacing={4}
+          align="center"
+          justify={"space-between"}
+          w={"full"}
+        >
+          <Link href="/roseline-etuokwu/quiz-competition">
+            <Image
+              src={"/assets/pngs/SigmaLogo.png"}
+              maxWidth={{ base: "150px", md: "200px", lg: "300px" }}
+            />
+          </Link>
+
+          <Button
+            as={Link}
+            href="/sign-in"
+            fontSize={"16px"}
+            width="100px"
+            padding="15px 16px"
+            borderRadius="10px"
+            bgColor={"white"}
+            color={"#8F19E7"}
+          >
+            Log In
+          </Button>
+        </Stack>
         <Stack maxW={"2xl"} align={"flex-start"}>
           <Heading
             as="h1"
@@ -104,7 +124,7 @@ function HeroSection() {
             University of Ibadan
           </Text>
         </Stack>
-        <Flex width="100%" direction={{base: 'column', lg: 'row'}} >
+        <Flex width="100%" direction={{ base: "column", lg: "row" }}>
           <Box flex="60%">
             <Stack
               direction={{ base: "column", md: "row" }}
@@ -115,37 +135,37 @@ function HeroSection() {
               py={8}
             >
               <ChakraProvider>
-      <Box>
-        <Menu>
-          <MenuButton
-            as={Button}
-            width={{ base: "100%", md: "411px" }} // Adjust width for mobile and larger screens
-            height={{base: 'auto', md: '60px'}}
-            padding={{ base: "16px", md: "16px 64px" }} // Adjust padding for mobile and larger screens
-            borderRadius="2.8125rem"
-            textAlign={"left"}
-            rightIcon={<ChevronDownIcon />}
-            bg="#ffffff"
-            color="#333333"
-          >
-            Select a quiz to view
-          </MenuButton>
-          <MenuList>
-            {quizzes.map((quiz, index) => (
-              <MenuItem key={index}>{quiz.title}</MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
-      </Box>
-    </ChakraProvider>
+                <Box>
+                  <Menu>
+                    <MenuButton
+                      as={Button}
+                      width={{ base: "100%", md: "411px" }} // Adjust width for mobile and larger screens
+                      height={{ base: "auto", md: "60px" }}
+                      padding={{ base: "16px", md: "16px 64px" }} // Adjust padding for mobile and larger screens
+                      borderRadius="2.8125rem"
+                      textAlign={"left"}
+                      rightIcon={<ChevronDownIcon />}
+                      bg="#ffffff"
+                      color="#333333"
+                    >
+                      Select a quiz to view
+                    </MenuButton>
+                    <MenuList>
+                      {quizzes.map((quiz, index) => (
+                        <MenuItem key={index}>{quiz.title}</MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                </Box>
+              </ChakraProvider>
 
               <ChakraProvider>
                 <Box position="relative">
                   <Button
-                  as={Link}
-                  href='/roseline-etuokwu/login'
-                    width={{ base: "100%", md: "9.875rem" }} 
-                    height={{base: 'auto', md: '60px'}}
+                    as={Link}
+                    href="/roseline-etuokwu/login"
+                    width={{ base: "100%", md: "9.875rem" }}
+                    height={{ base: "auto", md: "60px" }}
                     padding="16px 24px"
                     borderRadius="2.8125rem"
                     bg="#8F19E7"
@@ -167,7 +187,7 @@ function HeroSection() {
             </HStack>
           </Box>
 
-          <Box flex="40%" mt={20} >
+          <Box flex="40%" mt={20}>
             <Box
               width="357px"
               height="auto"
@@ -176,32 +196,33 @@ function HeroSection() {
               padding="1rem"
               borderRadius="16px"
               bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
-             
             >
               <Flex align="center">
-                <Avatar name="John Doe" src={'/assets/pngs/Avatar.png'} size="md" />
-               
+                <Avatar
+                  name="John Doe"
+                  src={"/assets/pngs/Avatar.png"}
+                  size="md"
+                />
+
                 <Text ml="4">
                   Watch our documentary on the Quiz Competition
                 </Text>
-                
-        
               </Flex>
               <Box pt={4}>
-                  <Button
+                <Button
                   as={Link}
-                  href='/roseline-etuokwu/quiz-documentary'
-                    leftIcon={<Icon as={FaPlay} />}
-                    bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
-                     fontSize={"12px"}
-                    width="325px"
-                    height="31px"
-                    padding="6px 16px"
-                    borderRadius="40px"
-                  >
-                    Play Video
-                  </Button>
-                </Box>
+                  href="/roseline-etuokwu/quiz-documentary"
+                  leftIcon={<Icon as={FaPlay} />}
+                  bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
+                  fontSize={"12px"}
+                  width="325px"
+                  height="31px"
+                  padding="6px 16px"
+                  borderRadius="40px"
+                >
+                  Play Video
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Flex>
@@ -210,5 +231,4 @@ function HeroSection() {
   );
 }
 
-
-export default HeroSection
+export default HeroSection;
