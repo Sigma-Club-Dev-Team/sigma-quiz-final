@@ -33,7 +33,7 @@ const SchoolDetailsPage: React.FC = () => {
         (registration) => registration.id === schoolregistrationID
       );
       console.log("Found school data:", school);
-      setSchoolData(school ?? null);
+      setSchoolData(school ?? null);=
     }
   }, [schoolregistrationID, quizDetails?.schoolRegistrations]);
 

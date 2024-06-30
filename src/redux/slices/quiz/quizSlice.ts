@@ -62,6 +62,7 @@ export interface School {
 }
 
 export interface SchoolRoundParticipation {
+    [x: string]: ReactNode;
     id:                   string;
     roundId:              string;
     schoolRegistrationId: string;
@@ -130,6 +131,10 @@ const quizSlice = createSlice({
             const {payload} = action
             state.quiz = payload
         },
+        setQuizDetails(state, action){
+            const {payload} = action
+            state.quizDetails = payload
+        },
         setSchoolRegistration(state, action){
             const {payload} = action
             state.schoolRegistration = payload
@@ -165,6 +170,6 @@ const quizSlice = createSlice({
     }
 })
 
-export const { setQuiz, setSchoolRegistration } = quizSlice.actions
+export const { setQuiz, setSchoolRegistration, setQuizDetails } = quizSlice.actions
 const quizReducer = quizSlice.reducer
 export default quizReducer
