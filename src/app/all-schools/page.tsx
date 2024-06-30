@@ -12,13 +12,6 @@ import Link from "next/link";
 import SchoolResultSummary from "./SchoolResutSummary";
 import { Question } from "@/redux/slices/quiz/quizSlice";
 
-interface SchoolResultSummaryProps {
-  testName: string;
-  position: string;
-  score: number;
-  answeredQuestions: any[];
-}
-
 const DetailsPage: React.FC = () => {
   const router = useRouter();
 
@@ -52,7 +45,6 @@ const DetailsPage: React.FC = () => {
                 </Box>
                 <Box>
                   <Link href={`/schools/${content.id}/test-details`}>
-                 
                     <Flex
                       alignItems="center"
                       color="blue.500"
@@ -66,7 +58,7 @@ const DetailsPage: React.FC = () => {
               </Flex>
               <SchoolResultSummary
                 testName="General knowledge quiz"
-                position='2nd'
+                position="3"
                 score={5}
                 answeredQuestions={[]}
               />
@@ -88,7 +80,5 @@ const TextRow = ({ title, text }: { title: string; text: string | number }) => {
     </Flex>
   );
 };
-
- 
 
 export default DetailsPage;
