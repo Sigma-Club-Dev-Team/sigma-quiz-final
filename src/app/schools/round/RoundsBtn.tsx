@@ -23,9 +23,9 @@ const RoundsButton = ({onRoundSelected, selectedRound, roundParticipations, roun
   };
 
   return (
-    <Box>
+    <Box mb={10}  mt={'20'}>
      
-      <Box px={8} mt={20}>
+      <Box px={8}>
         <Text fontSize={"16px"} color={"#333333"}>
           Test Details
         </Text>
@@ -47,7 +47,7 @@ const RoundsButton = ({onRoundSelected, selectedRound, roundParticipations, roun
             })}
           </Flex>
 
-          <Box textAlign={"center"} fontFamily={"Poppins"}>
+          {/* <Box textAlign={"center"} fontFamily={"Poppins"}>
             <Button
               leftIcon={<Box as={FaEdit} color="#333333" />}
               rightIcon={<Box as={FaPlus} color="#333333" />}
@@ -62,7 +62,7 @@ const RoundsButton = ({onRoundSelected, selectedRound, roundParticipations, roun
             >
               Edit / Add
             </Button>
-          </Box>
+          </Box> */}
         </Flex>
       </Box>
     </Box>

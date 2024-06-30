@@ -90,6 +90,10 @@ export interface IQuiz {
     date: string
 }
 
+export interface Question {
+    answered_correctly: boolean
+}
+
 type QuizState = {
     quizzes: IQuiz[],
     quiz: IQuiz | null,

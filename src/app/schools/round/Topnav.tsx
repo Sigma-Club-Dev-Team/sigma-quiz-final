@@ -12,7 +12,6 @@ import {
   Button,
   Flex,
   Text,
-  IconButton,
   useDisclosure,
   Drawer,
   DrawerBody,
@@ -21,25 +20,26 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
-import SidebarContent from "../../../components/sidebar";
+import Link from "next/link";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useAppSelector } from "@/redux/hooks";
+import SidebarContent from "../../../components/sidebar";
 
 const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { superAdminInfo } = useAppSelector(state => state.auth)
+  const { token, superAdminInfo, isLoggedIn } = useAppSelector(state => state.auth)
 
   return (
-    <Box >
+    <Box>
       <Flex
         justifyContent={"space-between"}
-        mb="4"
         textAlign={"right"}
         position="fixed"
         right="0rem"
+        top="0rem"
         zIndex="1000"
-        w={{base: '95%', md: '80%'}}
-        bg={'#ffffff'}
+        w={{ base: "95%", md: "80%" }}
+        bg="#ffffff"
       >
         <Box ml="auto" display="flex" alignItems="center" py={4}>
           <Box mr={4} textAlign="right">
@@ -47,22 +47,40 @@ const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
               {title}
             </Heading>
             <Text fontWeight="400" fontSize="12px">
-              Welcome {superAdminInfo?.first_name}
+              
+              {isLoggedIn ? (
+                <Text>Welcome {superAdminInfo?.first_name}</Text>
+              ) : (
+                <Link href="/sign-in">
+                  <Text
+                    fontWeight="500"
+                    p={0}
+                    color={"blue.500"}
+                    textDecoration={"underline"}
+                  >
+                    Log in
+                  </Text>
+                </Link>
+              )}
             </Text>
           </Box>
           <Menu>
-            <MenuButton
-              as={Button}
-              variant="ghost"
-              rightIcon={<ChevronDownIcon />}
-            >
-              <Avatar name="School Name" size="sm" />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </MenuList>
+            {isLoggedIn && (
+              <>
+                <MenuButton
+                  as={Button}
+                  variant="ghost"
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  <Avatar name="School Name" size="sm" />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem>Settings</MenuItem>
+                  <MenuItem>Logout</MenuItem>
+                </MenuList>
+              </>
+            )}
           </Menu>
         </Box>
       </Flex>

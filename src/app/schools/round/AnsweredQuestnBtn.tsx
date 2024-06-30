@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Flex, IconButton } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {  Button, Flex, } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Question } from "@/redux/slices/quiz/quizSlice";
 
@@ -78,4 +78,4 @@ const AnsweredButtons: React.FC<AnsweredButtonsProps> = ({
   );
 };
 
-export default AnsweredButtons;
+export default QuestionsBTN;
