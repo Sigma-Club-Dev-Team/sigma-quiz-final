@@ -10,6 +10,19 @@ interface SchoolResultSummaryProps {
   answeredQuestions: any[];
 }
 
+const positionToString = (position: string) => {
+  switch (position) {
+    case '1':
+      return '1st';
+    case '2':
+      return '2nd';
+    case '3':
+      return '3rd';
+    default:
+      return `${position}th`;
+  }
+};
+
 const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
   testName,
   position,
@@ -17,11 +30,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
   answeredQuestions,
 }) => {
   return (
-    <Flex
-      direction={{ base: "column", md: "row" }}
-      alignItems="center"
-      mb={8}
-    >
+    <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={8}>
       <Box
         order={{ base: 1, md: 2 }}
         width={{ base: "150px", md: "200px" }}
@@ -36,7 +45,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
         boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
       >
         <Text fontSize={{ base: "2xl", md: "3xl" }} color="#2FD790">
-          {position}
+          {positionToString(position)}
         </Text>
       </Box>
 
