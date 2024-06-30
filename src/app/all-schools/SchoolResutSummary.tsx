@@ -2,12 +2,16 @@
 
 import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
+import { AllAnsweredQuestions } from "@/lib/utilityFunctions";
+import { Question } from "@/redux/slices/quiz/quizSlice";
 
 interface SchoolResultSummaryProps {
   testName: string;
   position: string;
   score: number;
-  answeredQuestions: any[];
+  answeredQuestions: Question[];
+  corrects:  Question[];
+  wrongs:  Question[]
 }
 
 const positionToString = (position: string) => {
@@ -28,6 +32,8 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
   position,
   score,
   answeredQuestions,
+  corrects,
+  wrongs
 }) => {
   return (
     <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={8}>
@@ -75,16 +81,16 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
           boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
         >
           <Text fontSize={{ base: "2xl", md: "3xl" }} color="#2FD790">
-            23/50
+            {`${corrects.length}/${answeredQuestions.length}`}
           </Text>
         </Box>
 
         <Flex direction="column" justify="center" px={{ base: 4, md: 0 }} flexGrow={1}>
           <TextRow title="Test" text={testName} />
           <TextRow title="Questions Attempted" text={answeredQuestions.length} />
-          <TextRow title="Correct Answers" text="2" />
-          <TextRow title="Wrong Answers" text="3" />
-          <TextRow title="Overall Result" text={score.toString()} />
+          <TextRow title="Correct Answers" text={corrects.length} />
+          <TextRow title="Wrong Answers" text={wrongs.length} />
+          <TextRow title="Score" text={score.toString()} />
         </Flex>
       </Flex>
     </Flex>
