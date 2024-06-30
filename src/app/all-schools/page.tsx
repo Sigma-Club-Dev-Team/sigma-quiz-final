@@ -13,26 +13,32 @@ import SchoolResultSummary from "./SchoolResutSummary";
 import { getQuizDetails, Round } from "@/redux/slices/quiz/quizSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import AllSchoolsRoundsSelector from "./RoundsSelector";
-import { getAllAnsweredQuestions, getAllRightAnsweredQuestions, getAllWrongAnsweredQuestions } from "@/lib/utilityFunctions";
+import {
+  getAllAnsweredQuestions,
+  getAllRightAnsweredQuestions,
+  getAllWrongAnsweredQuestions,
+} from "@/lib/utilityFunctions";
+import Preloader from "@/components/UI/Preloader";
 
 const DetailsPage: React.FC = () => {
   const router = useRouter();
-  const { quizDetails, quiz, } =
-    useAppSelector((state) => state.quiz);
-  const [selectedRound, setSelectedRound] =
-    useState<Round | null>(null);
+  const { quizDetails, quiz, quizzesLoading } = useAppSelector(
+    (state) => state.quiz
+  );
+  const [selectedRound, setSelectedRound] = useState<Round | null>(null);
 
-    const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   // Function to handle navigation back
   const goBack = () => {
     router.back();
   };
 
-  useEffect(()=>{
-    quiz && dispatch(getQuizDetails(quiz?.id))
-  },[])
+  useEffect(() => {
+    quiz && dispatch(getQuizDetails(quiz?.id));
+  }, []);
 
+  if (quizzesLoading) return <Preloader />;
   return (
     <Flex>
       <SideBar />
@@ -43,10 +49,18 @@ const DetailsPage: React.FC = () => {
       >
         <Box fontFamily={"Poppins"}>
           <TopNav title="" />
-          <AllSchoolsRoundsSelector selectedRound={selectedRound} rounds={quizDetails?.rounds ?? []} onRoundSelected={(round) => setSelectedRound(round)}/>
+          <AllSchoolsRoundsSelector
+            selectedRound={selectedRound}
+            rounds={quizDetails?.rounds ?? []}
+            onRoundSelected={(round) => setSelectedRound(round)}
+          />
 
           {quizDetails?.schoolRegistrations.map((registration) => {
-            const schoolRoundParticipation = selectedRound?.schoolParticipations.filter((participation) => participation.schoolRegistrationId === registration.id)[0]
+            const schoolRoundParticipation =
+              selectedRound?.schoolParticipations.filter(
+                (participation) =>
+                  participation.schoolRegistrationId === registration.id
+              )[0];
             return (
               <Box key={registration.id}>
                 <Flex
@@ -71,35 +85,42 @@ const DetailsPage: React.FC = () => {
                     </Link>
                   </Box>
                 </Flex>
-                {
-                  selectedRound ? (
-                    <SchoolResultSummary
-                      testName={selectedRound.name}
-                      position={`${schoolRoundParticipation?.position}`}
-                      score={schoolRoundParticipation?.score! ?? 0}
-                      corrects={schoolRoundParticipation?.answered_questions.filter((answeredQuestions) => answeredQuestions.answered_correctly)! ?? []}
-                      wrongs={schoolRoundParticipation?.answered_questions.filter((answeredQuestions) => !answeredQuestions.answered_correctly)! ?? []}
-                      answeredQuestions={schoolRoundParticipation?.answered_questions! ?? []}
-                    />
-                  ) : (
-                    <SchoolResultSummary
-                      testName={"Overall"}
-                      position={`${registration.position}`}
-                      score={registration.score}
-                      corrects={getAllRightAnsweredQuestions(registration.rounds)}
-                      wrongs={getAllWrongAnsweredQuestions(registration.rounds)}
-                      answeredQuestions={
-                        getAllAnsweredQuestions(registration.rounds)
-                      }
-                    />
-                  )
-                }
+                {selectedRound ? (
+                  <SchoolResultSummary
+                    testName={selectedRound.name}
+                    position={`${schoolRoundParticipation?.position}`}
+                    score={schoolRoundParticipation?.score! ?? 0}
+                    corrects={
+                      schoolRoundParticipation?.answered_questions.filter(
+                        (answeredQuestions) =>
+                          answeredQuestions.answered_correctly
+                      )! ?? []
+                    }
+                    wrongs={
+                      schoolRoundParticipation?.answered_questions.filter(
+                        (answeredQuestions) =>
+                          !answeredQuestions.answered_correctly
+                      )! ?? []
+                    }
+                    answeredQuestions={
+                      schoolRoundParticipation?.answered_questions! ?? []
+                    }
+                  />
+                ) : (
+                  <SchoolResultSummary
+                    testName={"Overall"}
+                    position={`${registration.position}`}
+                    score={registration.score}
+                    corrects={getAllRightAnsweredQuestions(registration.rounds)}
+                    wrongs={getAllWrongAnsweredQuestions(registration.rounds)}
+                    answeredQuestions={getAllAnsweredQuestions(
+                      registration.rounds
+                    )}
+                  />
+                )}
               </Box>
-            )
-          }
-          
-          
-          )}
+            );
+          })}
         </Box>
       </Box>
     </Flex>
