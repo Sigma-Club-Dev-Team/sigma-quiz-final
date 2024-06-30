@@ -3,12 +3,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { contentData } from "./content";
 import Sidebar from "../../../components/sidebar";
 import TopNav from "./Topnav";
-import RoundsBtn from "./RoundsBtn";
-import QuestionsBTN from "./QuestionsButtons";
+import RoundsSelector from "./RoundsSelector";
 import AnsweredButtons from "./AnsweredQuestnBtn";
 import ScoreBoard from "./ScoreBoard";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -67,7 +64,7 @@ const RoundPage: React.FC = () => {
         marginLeft={{ base: "0%", md: "20%" }}
       >
         <TopNav title={quizDetails?.title} />
-        <RoundsBtn
+        <RoundsSelector
           roundsMap={roundsMap}
           roundParticipations={roundParticipations}
           selectedRound={selectedRound}

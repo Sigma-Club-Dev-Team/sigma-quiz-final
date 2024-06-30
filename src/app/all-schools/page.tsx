@@ -1,19 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, Text, Flex, IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { contentData } from "../schools/[pageId]/content";
+import { contentData } from "../schools/round/content";
 import SideBar from "../../components/sidebar";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import TopNav from "../schools/[pageId]/Topnav";
-import RoundsBtn from "../schools/[pageId]/RoundsBtn";
+import TopNav from "../schools/round/Topnav";
+import RoundsBtn from "../schools/round/RoundsSelector";
 import Link from "next/link";
 import SchoolResultSummary from "./SchoolResutSummary";
-import { Question } from "@/redux/slices/quiz/quizSlice";
+import { Round } from "@/redux/slices/quiz/quizSlice";
+import { useAppSelector } from "@/redux/hooks";
+import AllSchoolsRoundsSelector from "./RoundsSelector";
 
 const DetailsPage: React.FC = () => {
   const router = useRouter();
+  const { quizDetails } =
+    useAppSelector((state) => state.quiz);
+  const [selectedRound, setSelectedRound] =
+    useState<Round | null>(null);
 
   // Function to handle navigation back
   const goBack = () => {
@@ -30,7 +36,7 @@ const DetailsPage: React.FC = () => {
       >
         <Box fontFamily={"Poppins"}>
           <TopNav title="" />
-          <RoundsBtn />
+          <AllSchoolsRoundsSelector selectedRound={selectedRound} rounds={quizDetails?.rounds ?? []} onRoundSelected={(round) => setSelectedRound(round)}/>
 
           {contentData.map((content) => (
             <Box key={content.id}>

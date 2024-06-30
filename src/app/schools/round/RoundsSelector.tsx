@@ -5,11 +5,10 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
-import { FaEdit, FaPlus } from "react-icons/fa";
 import { Round, SchoolRoundParticipation } from "@/redux/slices/quiz/quizSlice";
 
 
-const RoundsButton = ({onRoundSelected, selectedRound, roundParticipations, roundsMap}: {
+const RoundsSelector = ({onRoundSelected, selectedRound, roundParticipations, roundsMap}: {
   roundsMap: Map<string, Round>,
   roundParticipations: SchoolRoundParticipation[],
   onRoundSelected: (newRound: SchoolRoundParticipation)=> void, selectedRound: SchoolRoundParticipation | null}) => {
@@ -69,4 +68,4 @@ const RoundsButton = ({onRoundSelected, selectedRound, roundParticipations, roun
   );
 };
 
-export default RoundsButton;
+export default RoundsSelector;
