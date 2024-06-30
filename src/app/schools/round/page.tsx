@@ -98,8 +98,7 @@ const RoundPage: React.FC = () => {
             </Box>
           )}
         </Box>
-        {/* {schoolRegistration && selectedRound && (
-        )} */}
+        {schoolRegistration && selectedRound && ( 
         <ScoreBoard
           quizScore={schoolRegistration?.score}
           roundScore={selectedRound?.score}
@@ -107,6 +106,7 @@ const RoundPage: React.FC = () => {
           quizRounds={schoolRegistration?.rounds}
           position={schoolRegistration?.position}
         />
+      )}
       </Box>
     </Flex>
   );
