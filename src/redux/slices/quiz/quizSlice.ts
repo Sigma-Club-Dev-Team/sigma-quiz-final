@@ -62,7 +62,6 @@ export interface School {
 }
 
 export interface SchoolRoundParticipation {
-    [x: string]: ReactNode;
     id:                   string;
     roundId:              string;
     schoolRegistrationId: string;
