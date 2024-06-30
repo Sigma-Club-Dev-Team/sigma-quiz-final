@@ -123,7 +123,7 @@ const SidebarContent: React.FC<{
       <HStack cursor="pointer" spacing={4} px={8}>
         <FaGraduationCap color="#333333" size="1.5rem" />
         <Text fontSize="xl" fontWeight="bold" color="#333333">
-          {quizDetails.title}
+          Schools
         </Text>
       </HStack>
 
