@@ -37,7 +37,7 @@ function SelectQuiz() {
 
   const handleSetQuiz = () => {
     dispatch(setQuiz(quizObj));
-    router.push("/schools/round");
+    router.push("/all-schools");
   };
   return (
     <Flex
