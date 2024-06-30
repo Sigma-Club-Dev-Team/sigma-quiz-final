@@ -1,5 +1,4 @@
 "use client";
-<<<<<<< HEAD
 import React, { useState, useEffect, useMemo } from "react";
 import { Box, Text, Flex, Button, VStack, Heading } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
@@ -12,46 +11,21 @@ import {
 } from "@/redux/slices/quiz/quizSlice";
 import TopNav from "../Topnav";
 import SchoolResultSummary from "../../../all-schools/SchoolResutSummary";
-import RoundsSelector from "../../round/RoundsSelector";
-import AnsweredButtons from "../AnsweredQuestnBtn";
 import AllSchoolsRoundsSelector from "@/app/all-schools/RoundsSelector";
 import {
   getAllAnsweredQuestions,
   getAllRightAnsweredQuestions,
   getAllWrongAnsweredQuestions,
 } from "@/lib/utilityFunctions";
-=======
-import React, { useState, useEffect, useMemo } from 'react';
-import { Box, Text, Flex, Button, VStack } from '@chakra-ui/react';
-import { useParams, usePathname } from 'next/navigation';
-import { useAppSelector, useAppDispatch } from '@/redux/hooks';
-import { SchoolRegistrationElement, Round, getQuizDetails, SchoolRoundParticipation } from '@/redux/slices/quiz/quizSlice';
-import TopNav from '../Topnav';
-import SchoolResultSummary from '../../../all-schools/SchoolResutSummary';
-import RoundsSelector from '../../round/RoundsSelector';
-import AnsweredButtons from '../AnsweredQuestnBtn';
-import AllSchoolsRoundsSelector from '@/app/all-schools/RoundsSelector';
-import { getAllAnsweredQuestions, getAllRightAnsweredQuestions, getAllWrongAnsweredQuestions } from '@/lib/utilityFunctions';
->>>>>>> b6312feea09c34aad53b74695d1a784f06f7aa91
+import AnsweredButtons from "../AnsweredQuestnBtn";
 
-const SchoolDetailsPage = () => {
+const SchoolDetailsPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
-<<<<<<< HEAD
-  const { id } = params;
   const schoolregistrationID = pathname.split("/").pop();
-  const { quizDetails, quiz, schoolRegistration } = useAppSelector(
-    (state) => state.quiz
-  );
+  const { quizDetails, quiz } = useAppSelector((state) => state.quiz);
   const [schoolData, setSchoolData] =
     useState<SchoolRegistrationElement | null>(null);
-=======
-  const params = useParams()
-  const { id } = params
-  const schoolregistrationID = pathname.split('/').pop();
-  const { quizDetails, quiz } = useAppSelector((state) => state.quiz);
-  const [schoolData, setSchoolData] = useState<SchoolRegistrationElement | null>(null);
->>>>>>> b6312feea09c34aad53b74695d1a784f06f7aa91
   const [selectedRound, setSelectedRound] = useState<Round | null>(null);
 
   useEffect(() => {
@@ -89,13 +63,13 @@ const SchoolDetailsPage = () => {
   const roundSummary = selectedRound || schoolData.rounds;
 
   const schoolRoundParticipation = selectedRound?.schoolParticipations.filter(
-    (participation) => participation.schoolRegistrationId === id
+    (participation) => participation.schoolRegistrationId === schoolData.id
   )[0];
 
   const registration = quizDetails?.schoolRegistrations.filter(
-    (reg) => reg.id === id
+    (reg) => reg.id === schoolData.id
   )[0];
-  console.log({ registration, schoolRoundParticipation, id });
+  console.log({ registration, schoolRoundParticipation, id: schoolData.id });
 
   console.log("Quiz Details:: ", quizDetails);
 
@@ -145,8 +119,8 @@ const SchoolDetailsPage = () => {
       )}
 
       <VStack gap={2} alignItems={'flex-start'}>
-        {schoolRegistration?.rounds.map((round, index) => (
-          <Flex key={round.id}   width={{base: '100%', md: '65%'}}>
+        {schoolData?.rounds.map((round, index) => (
+          <Flex key={round.id} width={{base: '100%', md: '65%'}}>
             <Flex flex={1}>
               {round.answered_questions.length < 1 ? (
                 <Text color={"red"}>No Questions Answered Yet</Text>
