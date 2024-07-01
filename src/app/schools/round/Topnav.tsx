@@ -19,15 +19,25 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Spinner,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SidebarContent from "../../../components/sidebar";
+import { QuizStatus, toggleQuizStatus } from "@/redux/slices/quiz/quizSlice";
 
 const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { token, superAdminInfo, isLoggedIn } = useAppSelector(state => state.auth)
+  const { quizDetails, togglingStatus } = useAppSelector(state => state.quiz)
+
+  const dispatch = useAppDispatch()
+
+  const handleQuizStatusChange = (status : QuizStatus) => {
+    quizDetails && dispatch(toggleQuizStatus({status, quizId: quizDetails?.id}))
+  }
+  
 
   return (
     <Box>
@@ -76,12 +86,12 @@ const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
                   variant="ghost"
                   rightIcon={<ChevronDownIcon />}
                 >
-                  <Avatar name="School Name" size="sm" />
+                  {togglingStatus ? <Spinner /> : <Avatar name={quizDetails?.status ?? 'pending'} size="sm" />}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={()=>handleQuizStatusChange(QuizStatus.Pending)}>Pending</MenuItem>
+                  <MenuItem onClick={()=>handleQuizStatusChange(QuizStatus.InProgress)}>In Progress</MenuItem>
+                  <MenuItem onClick={()=>handleQuizStatusChange(QuizStatus.Completed)}>Completed</MenuItem>
                 </MenuList>
               </>
             )}

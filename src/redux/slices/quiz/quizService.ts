@@ -1,5 +1,5 @@
 import { api } from "@/api";
-import { PaginationPayload } from "@/types";
+import { ToggleStatusPayload } from "@/types";
 
 const fetchAllQuizzes = async() => {
     const response = await api.getAllQuizzes()
@@ -11,8 +11,13 @@ const fetchQuizDetails = async(payload: string) => {
     return response.data
 }
 
+const toggleStatus = async(payload: ToggleStatusPayload) => {
+    const response = await api.updateQuizStatus(payload)
+    return response.data
+}
+
 const quizService = {
-    fetchAllQuizzes, fetchQuizDetails
+    fetchAllQuizzes, fetchQuizDetails, toggleStatus
 }
 
 export default quizService

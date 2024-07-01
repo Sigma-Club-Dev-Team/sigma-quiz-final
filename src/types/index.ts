@@ -1,6 +1,6 @@
-export type PaginationPayload = {
-    page: number,
-    perPage: number,
-    status?: string[] | boolean[],
-    date?: string[] | Date[]
+import { QuizStatus } from "@/redux/slices/quiz/quizSlice"
+
+export type ToggleStatusPayload = {
+    status: QuizStatus,
+    quizId: string
 }
