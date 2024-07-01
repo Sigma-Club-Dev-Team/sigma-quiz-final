@@ -1,6 +1,14 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Text, Flex, Button, VStack, Heading, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  Button,
+  VStack,
+  Heading,
+  IconButton,
+} from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
@@ -28,9 +36,8 @@ const SchoolDetailsPage = () => {
   const pathname = usePathname();
   const schoolregistrationID = pathname.split("/").pop();
   const { quizDetails, quiz } = useAppSelector((state) => state.quiz);
-  const [schoolData, setSchoolData] = useState<SchoolRegistrationElement | null>(
-    null
-  );
+  const [schoolData, setSchoolData] =
+    useState<SchoolRegistrationElement | null>(null);
   const [selectedRound, setSelectedRound] = useState<Round | null>(null);
   const [viewOverall, setViewOverall] = useState(true);
 
@@ -83,19 +90,22 @@ const SchoolDetailsPage = () => {
   return (
     <Box p={8}>
       <TopNav title="" />
-      <Flex alignItems="center" mt={8} >
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} cursor={"pointer"} onClick={() => router.back()}>
-        <IconButton
-          aria-label="Back"
-          icon={<ChevronLeftIcon   />}
-          variant="ghost"
-          colorScheme="gray"
-         
-        />
-      </Box>
-        <Heading ml={2}>
-          {schoolData.school.name}
-        </Heading>
+      <Flex alignItems="center" mt={8}>
+        <Box
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          cursor={"pointer"}
+          onClick={() => router.back()}
+        >
+          <IconButton
+            aria-label="Back"
+            icon={<ChevronLeftIcon />}
+            variant="ghost"
+            colorScheme="gray"
+          />
+        </Box>
+        <Heading ml={2}>{schoolData.school.name}</Heading>
       </Flex>
       {quizDetails && registration && (
         <SchoolDetailsRoundSelector
