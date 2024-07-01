@@ -96,6 +96,7 @@ type QuizState = {
     quizDetails: IQuizDetail | null,
     quizzesLoading: boolean,
     schoolRegistration: SchoolRegistrationElement | null,
+    errorFetching: boolean
 }
 
 const initialState = {
@@ -103,7 +104,8 @@ const initialState = {
     quiz: null,
     quizzesLoading: false,
     quizDetails: null,
-    schoolRegistration: null
+    schoolRegistration: null,
+    errorFetching: false
 } as QuizState
 
 export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: undefined, thunkAPI) => {
@@ -165,6 +167,8 @@ const quizSlice = createSlice({
         })
         .addCase(getQuizDetails.rejected, (state)=>{
             state.quizzesLoading = false;
+            
+            state.errorFetching = true
         })
     }
 })

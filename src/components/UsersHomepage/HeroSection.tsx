@@ -37,9 +37,9 @@ function HeroSection() {
   const router = useRouter();
 
   const handleSetQuiz = () => {
-    dispatch(setQuiz(quizObj));
-    router.push("/all-schools");
-  };
+    dispatch(setQuiz((quizObj)))
+    router.push('/all-schools')
+  }
 
   const buttonProps = {
     variant: "ghost",
