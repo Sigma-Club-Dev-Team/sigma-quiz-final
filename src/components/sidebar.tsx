@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -54,6 +54,12 @@ const Sidebar: React.FC = () => {
       router.push("/schools/round");
     }
   };
+
+    
+  useEffect(()=>{
+    quizDetails && dispatch(setSchoolRegistration(quizDetails.schoolRegistrations.find(sch => sch.id === schoolRegistration?.id) ?? schoolRegistration));
+  }, [quizDetails])
+
 
   return (
     <>
