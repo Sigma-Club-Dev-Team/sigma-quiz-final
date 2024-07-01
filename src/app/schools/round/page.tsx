@@ -13,6 +13,7 @@ import {
   getQuizDetails,
   Round,
   SchoolRoundParticipation,
+  setSchoolRegistration,
 } from "@/redux/slices/quiz/quizSlice";
 import QuestionInfoSection from "./QuestionInfoSection";
 import Preloader from "@/components/UI/Preloader";
