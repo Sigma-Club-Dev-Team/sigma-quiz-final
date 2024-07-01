@@ -140,7 +140,7 @@ const SchoolDetailsPage = () => {
 
       <VStack gap={2} alignItems={"flex-start"}>
         {schoolData?.rounds.map((round, index) => (
-          <Flex key={round.id} width={{ base: "100%", md: "65%" }}>
+          <Flex key={round.id} width={{ base: "100%", md: "65%" }} direction={{base: 'column', md: 'row'}}>
             <Flex flex={1}>
               {round.answered_questions.length < 1 ? (
                 <Text color={"red"}>No Questions Answered Yet</Text>
@@ -148,7 +148,7 @@ const SchoolDetailsPage = () => {
                 <AnsweredButtons questions={round.answered_questions} />
               )}
             </Flex>
-            <Button ml={4}>{roundsMap.get(round.roundId)?.name}</Button>
+            <Button ml={4} mb={{ base: "6", md: "0" }}>{roundsMap.get(round.roundId)?.name}</Button>
           </Flex>
         ))}
       </VStack>
