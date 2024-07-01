@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Text, Flex, IconButton } from "@chakra-ui/react";
+import { Box, Text, Flex, IconButton, Button, Link } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { contentData } from "../schools/round/content";
 import SideBar from "../../components/sidebar";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import TopNav from "../schools/round/Topnav";
 import RoundsBtn from "../schools/round/RoundsSelector";
-import Link from "next/link";
 import SchoolResultSummary from "./SchoolResutSummary";
 import { getQuizDetails, Round } from "@/redux/slices/quiz/quizSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -47,8 +46,24 @@ const DetailsPage: React.FC = () => {
   }, [quizDetails]);
 
   if (quizzesLoading) return <Preloader />;
-
-
+  if (!quiz && !quizDetails) {
+    return (
+      <Flex
+        align={"center"}
+        justify={"center"}
+        w={"100dvw"}
+        h={"100dvh"}
+        flexDirection={"column"}
+      >
+        <p>Error Fetching Quiz detail.</p> <br />
+        <Text>
+          <Link href="/" color={"brand.purple"}>
+            Back to Home Page
+          </Link>
+        </Text>
+      </Flex>
+    );
+  }
   return (
     <Flex>
       <SideBar />
@@ -96,7 +111,7 @@ const DetailsPage: React.FC = () => {
                 {selectedRound ? (
                   schoolRoundParticipation ? <SchoolResultSummary
                     testName={selectedRound.name}
-                    position={`${schoolRoundParticipation?.position}`}
+                    position={schoolRoundParticipation?.position ?? 0}
                     score={schoolRoundParticipation?.score! ?? 0}
                     corrects={
                       schoolRoundParticipation?.answered_questions?.filter(
@@ -117,7 +132,7 @@ const DetailsPage: React.FC = () => {
                 ) : (
                   <SchoolResultSummary
                     testName={"Overall"}
-                    position={`${registration.position}`}
+                    position={registration?.position ?? 0}
                     score={registration.score}
                     corrects={getAllRightAnsweredQuestions(registration.rounds)}
                     wrongs={getAllWrongAnsweredQuestions(registration.rounds)}

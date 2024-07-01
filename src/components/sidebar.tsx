@@ -29,15 +29,18 @@ import {
   FaPlus,
   FaBars,
 } from "react-icons/fa";
-import { contentData } from "../app/schools/round/content";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { IQuizDetail, School, SchoolRegistrationElement, setSchoolRegistration } from "@/redux/slices/quiz/quizSlice";
+import {
+  IQuizDetail,
+  SchoolRegistrationElement,
+  setSchoolRegistration,
+} from "@/redux/slices/quiz/quizSlice";
 import { useRouter } from "next/navigation";
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { quizDetails, schoolRegistration } = useAppSelector(
@@ -45,12 +48,12 @@ const Sidebar: React.FC = () => {
   );
 
   const handleSetSchool = (school: SchoolRegistrationElement) => {
-    console.log(pathname)
-    dispatch(setSchoolRegistration(school))
-    if(pathname === '/all-schools'){
-      router.push('/schools/round')
+    console.log(pathname);
+    dispatch(setSchoolRegistration(school));
+    if (pathname === "/all-schools") {
+      router.push("/schools/round");
     }
-  }
+  };
 
   return (
     <>
@@ -139,18 +142,28 @@ const SidebarContent: React.FC<{
             py={2}
             borderLeft="5px solid"
             borderColor={
-              pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
+              pathname !== "/all-schools" &&
+              schoolRegistration?.schoolId === registration.schoolId
+                ? "#8F19E7"
+                : "transparent"
             }
             shadow={"md"}
           >
-            <Text color={pathname !== '/all-schools' && schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
+            <Text
+              color={
+                pathname !== "/all-schools" &&
+                schoolRegistration?.schoolId === registration.schoolId
+                  ? "#8F19E7"
+                  : "#000000"
+              }
+            >
               {registration.school.name}
             </Text>
           </HStack>
         ))}
       </VStack>
 
-      <Box textAlign={"center"}>
+      {/* <Box textAlign={"center"}>
         <Button
           leftIcon={
             <Box
@@ -200,7 +213,7 @@ const SidebarContent: React.FC<{
           />
           <Text color="#333333">Scores</Text>
         </HStack>
-      </Box>
+      </Box> */}
 
       <VStack align="stretch" spacing={4}>
         <Link href="/all-schools">
