@@ -39,7 +39,7 @@ function HeroSection() {
   
   const handleSetQuiz = () => {
     dispatch(setQuiz((quizObj)))
-    router.push('/schools/round')
+    router.push('/all-schools')
   }
 
   const buttonProps = {
@@ -195,7 +195,7 @@ function HeroSection() {
             </HStack>
           </Box>
 
-          <Box flex="40%" mt={20}>
+          {/* <Box flex="40%" mt={20}>
             <Box
               width="357px"
               height="auto"
@@ -232,7 +232,7 @@ function HeroSection() {
                 </Button>
               </Box>
             </Box>
-          </Box>
+          </Box> */}
         </Flex>
       </VStack>
     </Flex>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Text, Flex, IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { contentData } from "../schools/round/content";
@@ -37,8 +37,18 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     quiz && dispatch(getQuizDetails(quiz?.id));
   }, []);
+  
+  const roundsMap = useMemo(() => {
+    const map = new Map<string, Round>();
+    quizDetails?.rounds.forEach((round) => {
+      map.set(round.id, round);
+    });
+    return map;
+  }, [quizDetails]);
 
   if (quizzesLoading) return <Preloader />;
+
+
   return (
     <Flex>
       <SideBar />
@@ -56,11 +66,9 @@ const DetailsPage: React.FC = () => {
           />
 
           {quizDetails?.schoolRegistrations.map((registration) => {
-            const schoolRoundParticipation =
-              selectedRound?.schoolParticipations.filter(
-                (participation) =>
-                  participation.schoolRegistrationId === registration.id
-              )[0];
+            const schoolRoundParticipation = registration?.rounds.find(
+              (participation) => participation.roundId === selectedRound?.id
+            );
             return (
               <Box key={registration.id}>
                 <Flex
@@ -86,18 +94,18 @@ const DetailsPage: React.FC = () => {
                   </Box>
                 </Flex>
                 {selectedRound ? (
-                  <SchoolResultSummary
+                  schoolRoundParticipation ? <SchoolResultSummary
                     testName={selectedRound.name}
                     position={`${schoolRoundParticipation?.position}`}
                     score={schoolRoundParticipation?.score! ?? 0}
                     corrects={
-                      schoolRoundParticipation?.answered_questions.filter(
+                      schoolRoundParticipation?.answered_questions?.filter(
                         (answeredQuestions) =>
                           answeredQuestions.answered_correctly
                       )! ?? []
                     }
                     wrongs={
-                      schoolRoundParticipation?.answered_questions.filter(
+                      schoolRoundParticipation?.answered_questions?.filter(
                         (answeredQuestions) =>
                           !answeredQuestions.answered_correctly
                       )! ?? []
@@ -105,7 +113,7 @@ const DetailsPage: React.FC = () => {
                     answeredQuestions={
                       schoolRoundParticipation?.answered_questions! ?? []
                     }
-                  />
+                  /> : "Round Not Available for School"
                 ) : (
                   <SchoolResultSummary
                     testName={"Overall"}

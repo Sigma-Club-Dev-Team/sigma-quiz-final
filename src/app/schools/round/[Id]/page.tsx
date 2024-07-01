@@ -18,6 +18,8 @@ import {
   getAllWrongAnsweredQuestions,
 } from "@/lib/utilityFunctions";
 import AnsweredButtons from "../AnsweredQuestnBtn";
+import Preloader from "@/components/UI/Preloader";
+import SchoolDetailsRoundSelector from "./SchoolDetailsRoundsSelector";
 
 const SchoolDetailsPage = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +29,7 @@ const SchoolDetailsPage = () => {
   const [schoolData, setSchoolData] =
     useState<SchoolRegistrationElement | null>(null);
   const [selectedRound, setSelectedRound] = useState<Round | null>(null);
+  const [viewOverall, setViewOverall] = useState(true);
 
   useEffect(() => {
     if (quiz && !quizDetails) {
@@ -34,6 +37,7 @@ const SchoolDetailsPage = () => {
       dispatch(getQuizDetails(quiz.id));
     }
   }, [dispatch, quiz, quizDetails]);
+
 
   useEffect(() => {
     console.log("Checking school registration ID:", schoolregistrationID);
@@ -57,21 +61,23 @@ const SchoolDetailsPage = () => {
   }, [quizDetails]);
 
   if (!schoolData) {
-    return <Box>Loading...</Box>;
+    return <Preloader />;
   }
 
   const roundSummary = selectedRound || schoolData.rounds;
 
-  const schoolRoundParticipation = selectedRound?.schoolParticipations.filter(
-    (participation) => participation.schoolRegistrationId === schoolData.id
-  )[0];
-
-  const registration = quizDetails?.schoolRegistrations.filter(
+  const registration = quizDetails?.schoolRegistrations.find(
     (reg) => reg.id === schoolData.id
-  )[0];
+  );
+
+  const schoolRoundParticipation = registration?.rounds.find(
+    (participation) => participation.roundId === selectedRound?.id
+  );
+
+  
   console.log({ registration, schoolRoundParticipation, id: schoolData.id });
 
-  console.log("Quiz Details:: ", quizDetails);
+  console.log("Rounds Participation:: ", selectedRound);
 
   return (
     <Box p={8}>
@@ -79,10 +85,10 @@ const SchoolDetailsPage = () => {
       <Heading mt={8}>
       {schoolData.school.name}
       </Heading>
-      {quizDetails && (
-        <AllSchoolsRoundsSelector
+      {quizDetails && registration && (
+        <SchoolDetailsRoundSelector
           selectedRound={selectedRound}
-          rounds={quizDetails?.rounds}
+          rounds={registration.rounds.map(rds => roundsMap.get(rds.roundId)!)}
           onRoundSelected={(round) => setSelectedRound(round)}
         />
       )}
@@ -92,12 +98,12 @@ const SchoolDetailsPage = () => {
           position={`${schoolRoundParticipation?.position}`}
           score={schoolRoundParticipation?.score! ?? 0}
           corrects={
-            schoolRoundParticipation?.answered_questions.filter(
+            schoolRoundParticipation?.answered_questions?.filter(
               (answeredQuestions) => answeredQuestions.answered_correctly
             )! ?? []
           }
           wrongs={
-            schoolRoundParticipation?.answered_questions.filter(
+            schoolRoundParticipation?.answered_questions?.filter(
               (answeredQuestions) => !answeredQuestions.answered_correctly
             )! ?? []
           }
@@ -128,7 +134,7 @@ const SchoolDetailsPage = () => {
                 <AnsweredButtons questions={round.answered_questions} />
               )}
             </Flex>
-            <Button ml={4}>Round {index + 1}</Button>
+            <Button ml={4}>{roundsMap.get(round.roundId)?.name}</Button>
           </Flex>
         ))}
       </VStack>
