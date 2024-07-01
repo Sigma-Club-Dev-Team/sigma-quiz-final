@@ -93,9 +93,9 @@ const SchoolDetailsPage = () => {
         />
       )}
       {selectedRound ? (
-        <SchoolResultSummary
+        schoolRoundParticipation && <SchoolResultSummary
           testName={selectedRound.name}
-          position={`${schoolRoundParticipation?.position}`}
+          position={schoolRoundParticipation?.position}
           score={schoolRoundParticipation?.score! ?? 0}
           corrects={
             schoolRoundParticipation?.answered_questions?.filter(
@@ -114,7 +114,7 @@ const SchoolDetailsPage = () => {
       ) : registration ? (
         <SchoolResultSummary
           testName={"Overall"}
-          position={`${registration?.position}`}
+          position={registration?.position}
           score={registration?.score}
           corrects={getAllRightAnsweredQuestions(registration?.rounds)}
           wrongs={getAllWrongAnsweredQuestions(registration?.rounds)}
