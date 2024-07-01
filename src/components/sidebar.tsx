@@ -29,20 +29,31 @@ import {
   FaPlus,
   FaBars,
 } from "react-icons/fa";
-import { contentData } from "../app/schools/round/content";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { IQuizDetail, School, SchoolRegistrationElement, setSchoolRegistration } from "@/redux/slices/quiz/quizSlice";
+import {
+  IQuizDetail,
+  SchoolRegistrationElement,
+  setSchoolRegistration,
+} from "@/redux/slices/quiz/quizSlice";
+import { useRouter } from "next/navigation";
 
 const Sidebar: React.FC = () => {
+  const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { quizDetails, schoolRegistration } = useAppSelector(state => state.quiz)
-  
+  const { quizDetails, schoolRegistration } = useAppSelector(
+    (state) => state.quiz
+  );
+
   const handleSetSchool = (school: SchoolRegistrationElement) => {
-    dispatch(setSchoolRegistration(school))
-  }
+    console.log(pathname);
+    dispatch(setSchoolRegistration(school));
+    if (pathname === "/all-schools") {
+      router.push("/schools/round");
+    }
+  };
 
   return (
     <>
@@ -56,7 +67,7 @@ const Sidebar: React.FC = () => {
         display={{ base: "flex", md: "none" }}
         onClick={onOpen}
       />
-      
+
       <Box
         bg="#EDEDED"
         color="white"
@@ -69,16 +80,30 @@ const Sidebar: React.FC = () => {
         top={"0"}
         display={{ base: "none", md: "block" }}
       >
-        {quizDetails && <SidebarContent schoolRegistration={schoolRegistration} handleSetSchool={handleSetSchool} quizDetails={quizDetails} pathname={pathname} />}
+        {quizDetails && (
+          <SidebarContent
+            schoolRegistration={schoolRegistration}
+            handleSetSchool={handleSetSchool}
+            quizDetails={quizDetails}
+            pathname={pathname}
+          />
+        )}
       </Box>
 
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={'full'}>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size={"full"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{''}</DrawerHeader>
+          <DrawerHeader>{""}</DrawerHeader>
           <DrawerBody>
-            {quizDetails && <SidebarContent schoolRegistration={schoolRegistration} handleSetSchool={handleSetSchool} quizDetails={quizDetails} pathname={pathname} />}
+            {quizDetails && (
+              <SidebarContent
+                schoolRegistration={schoolRegistration}
+                handleSetSchool={handleSetSchool}
+                quizDetails={quizDetails}
+                pathname={pathname}
+              />
+            )}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
@@ -86,9 +111,16 @@ const Sidebar: React.FC = () => {
   );
 };
 
-const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, handleSetSchool: (school: SchoolRegistrationElement) => void, schoolRegistration: SchoolRegistrationElement | null }> = ({ pathname, quizDetails, handleSetSchool, schoolRegistration }) => {
-  const { token, superAdminInfo, isLoggedIn } = useAppSelector(state => state.auth)
-  
+const SidebarContent: React.FC<{
+  pathname: string;
+  quizDetails: IQuizDetail;
+  handleSetSchool: (school: SchoolRegistrationElement) => void;
+  schoolRegistration: SchoolRegistrationElement | null;
+}> = ({ pathname, quizDetails, handleSetSchool, schoolRegistration }) => {
+  const { token, superAdminInfo, isLoggedIn } = useAppSelector(
+    (state) => state.auth
+  );
+
   return (
     <VStack spacing={6} align="stretch">
       <HStack cursor="pointer" spacing={4} px={8}>
@@ -98,36 +130,58 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
         </Text>
       </HStack>
 
-    <VStack align="stretch" spacing={4}>
-      {quizDetails.schoolRegistrations.map((registration, index) => (
+      <VStack align="stretch" spacing={4}>
+        {quizDetails.schoolRegistrations.map((registration, index) => (
           <HStack
             key={index}
             cursor="pointer"
             spacing={4}
             bg={"#ffffff"}
-            onClick={()=>handleSetSchool(registration)}
+            onClick={() => handleSetSchool(registration)}
             px={8}
             py={2}
             borderLeft="5px solid"
             borderColor={
-              schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "transparent"
+              pathname !== "/all-schools" &&
+              schoolRegistration?.schoolId === registration.schoolId
+                ? "#8F19E7"
+                : "transparent"
             }
             shadow={"md"}
           >
-            <Text color={schoolRegistration?.schoolId === registration.schoolId ? "#8F19E7" : "#000000"}>
+            <Text
+              color={
+                pathname !== "/all-schools" &&
+                schoolRegistration?.schoolId === registration.schoolId
+                  ? "#8F19E7"
+                  : "#000000"
+              }
+            >
               {registration.school.name}
             </Text>
           </HStack>
-      ))}
-    </VStack>
+        ))}
+      </VStack>
 
-      <Box textAlign={"center"}>
+      {/* <Box textAlign={"center"}>
         <Button
           leftIcon={
-            <Box as={FaEdit} bg="white" borderRadius=".3125rem" p={1} color="#8F19E7" />
+            <Box
+              as={FaEdit}
+              bg="white"
+              borderRadius=".3125rem"
+              p={1}
+              color="#8F19E7"
+            />
           }
           rightIcon={
-            <Box as={FaPlus} bg="white" borderRadius=".3125rem" p={1} color="#8F19E7" />
+            <Box
+              as={FaPlus}
+              bg="white"
+              borderRadius=".3125rem"
+              p={1}
+              color="#8F19E7"
+            />
           }
           bg={"#8F19E7"}
           variant="solid"
@@ -159,10 +213,10 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
           />
           <Text color="#333333">Scores</Text>
         </HStack>
-      </Box>
+      </Box> */}
 
       <VStack align="stretch" spacing={4}>
-        <Link href="/all-schools" >
+        <Link href="/all-schools">
           <HStack
             cursor="pointer"
             spacing={0}
@@ -171,7 +225,9 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
             _hover={{ shadow: "md" }}
             alignItems="center"
             borderLeft="5px solid"
-            borderColor={pathname === "/all-schools" ? "#8F19E7" : "transparent"}
+            borderColor={
+              pathname === "/all-schools" ? "#8F19E7" : "transparent"
+            }
             bg={"#ffffff"}
           >
             <IconButton
@@ -186,7 +242,7 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
 
         {isLoggedIn ? (
           <>
-            <Link href="/manage-questions" >
+            <Link href="/manage-questions">
               <HStack
                 cursor="pointer"
                 spacing={0}
@@ -195,7 +251,9 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 _hover={{ shadow: "md" }}
                 alignItems="center"
                 borderLeft="5px solid"
-                borderColor={pathname === "/manage-questions" ? "#8F19E7" : "transparent"}
+                borderColor={
+                  pathname === "/manage-questions" ? "#8F19E7" : "transparent"
+                }
                 bg={"#ffffff"}
               >
                 <IconButton
@@ -207,7 +265,7 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 <Text color="#333333">Manage Questions</Text>
               </HStack>
             </Link>
-            <Link href="/account" >
+            <Link href="/account">
               <HStack
                 cursor="pointer"
                 spacing={0}
@@ -216,7 +274,9 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 _hover={{ shadow: "md" }}
                 alignItems="center"
                 borderLeft="5px solid"
-                borderColor={pathname === "/account" ? "#8F19E7" : "transparent"}
+                borderColor={
+                  pathname === "/account" ? "#8F19E7" : "transparent"
+                }
                 bg={"#ffffff"}
               >
                 <IconButton
@@ -228,7 +288,7 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 <Text color="#333333">Account</Text>
               </HStack>
             </Link>
-            <Link href="/manage-users" >
+            <Link href="/manage-users">
               <HStack
                 cursor="pointer"
                 spacing={0}
@@ -237,7 +297,9 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 _hover={{ shadow: "md" }}
                 alignItems="center"
                 borderLeft="5px solid"
-                borderColor={pathname === "/manage-users" ? "#8F19E7" : "transparent"}
+                borderColor={
+                  pathname === "/manage-users" ? "#8F19E7" : "transparent"
+                }
                 bg={"#ffffff"}
               >
                 <IconButton
@@ -249,7 +311,7 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 <Text color="#333333">Manage Users</Text>
               </HStack>
             </Link>
-            <Link href="/my-account" >
+            <Link href="/my-account">
               <HStack
                 cursor="pointer"
                 spacing={0}
@@ -258,7 +320,9 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
                 _hover={{ shadow: "md" }}
                 alignItems="center"
                 borderLeft="5px solid"
-                borderColor={pathname === "/my-account" ? "#8F19E7" : "transparent"}
+                borderColor={
+                  pathname === "/my-account" ? "#8F19E7" : "transparent"
+                }
                 shadow={"lg"}
                 bg={"#ffffff"}
               >
@@ -273,7 +337,7 @@ const SidebarContent: React.FC<{ pathname: string, quizDetails: IQuizDetail, han
             </Link>
           </>
         ) : (
-         ''
+          ""
         )}
       </VStack>
     </VStack>

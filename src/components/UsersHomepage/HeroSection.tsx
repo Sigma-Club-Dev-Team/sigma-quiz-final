@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Flex,
@@ -26,12 +26,20 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getQuizzes } from "@/redux/slices/quiz/quizSlice";
+import { getQuizzes, IQuiz, setQuiz } from "@/redux/slices/quiz/quizSlice";
+import { useRouter } from "next/navigation";
 
 function HeroSection() {
+  const [quizObj, setQuizObj] = useState<IQuiz | null>(null);
   const { superAdminInfo, token } = useAppSelector((state) => state.auth);
   const { quizzes } = useAppSelector((state) => state.quiz);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleSetQuiz = () => {
+    dispatch(setQuiz(quizObj));
+    router.push("/all-schools");
+  };
 
   const buttonProps = {
     variant: "ghost",
@@ -148,11 +156,13 @@ function HeroSection() {
                       bg="#ffffff"
                       color="#333333"
                     >
-                      Select a quiz to view
+                      {quizObj ? quizObj.title : "Select a quiz to view"}
                     </MenuButton>
                     <MenuList>
                       {quizzes.map((quiz, index) => (
-                        <MenuItem key={index}>{quiz.title}</MenuItem>
+                        <MenuItem onClick={() => setQuizObj(quiz)} key={index}>
+                          {quiz.title}
+                        </MenuItem>
                       ))}
                     </MenuList>
                   </Menu>
@@ -162,14 +172,13 @@ function HeroSection() {
               <ChakraProvider>
                 <Box position="relative">
                   <Button
-                    as={Link}
-                    href="/roseline-etuokwu/login"
                     width={{ base: "100%", md: "9.875rem" }}
                     height={{ base: "auto", md: "60px" }}
                     padding="16px 24px"
                     borderRadius="2.8125rem"
                     bg="#8F19E7"
                     color="white"
+                    onClick={handleSetQuiz}
                     _hover={{
                       opacity: 0.8,
                     }}
@@ -187,7 +196,7 @@ function HeroSection() {
             </HStack>
           </Box>
 
-          <Box flex="40%" mt={20}>
+          {/* <Box flex="40%" mt={20}>
             <Box
               width="357px"
               height="auto"
@@ -224,7 +233,7 @@ function HeroSection() {
                 </Button>
               </Box>
             </Box>
-          </Box>
+          </Box> */}
         </Flex>
       </VStack>
     </Flex>

@@ -1,18 +1,13 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  Box,
-  Text,
-  Flex,
-  IconButton,
-} from "@chakra-ui/react";
+import { Box, Text, Flex, IconButton } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { contentData } from "../content";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import TopNav from '../Topnav'
+import TopNav from "../Topnav";
 import AnsweredButtons from "../AnsweredQuestnBtn";
-import RoundsSelector from '../RoundsSelector';
+import RoundsSelector from "../RoundsSelector";
 import { useAppSelector } from "@/redux/hooks";
 import { SchoolRoundParticipation } from "@/redux/slices/quiz/quizSlice";
 
@@ -20,11 +15,11 @@ const DetailsPage: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { quizDetails, schoolRegistration } =
-  useAppSelector((state) => state.quiz);
-const [selectedRound, setSelectedRound] =
-  useState<SchoolRoundParticipation | null>(null);
-
+  const { quizDetails, schoolRegistration } = useAppSelector(
+    (state) => state.quiz
+  );
+  const [selectedRound, setSelectedRound] =
+    useState<SchoolRoundParticipation | null>(null);
 
   const roundsMap = useMemo(() => {
     return new Map(
@@ -50,41 +45,38 @@ const [selectedRound, setSelectedRound] =
 
   const pageContent = contentData.find((content) => content.id === pageId);
 
-  if (!pageContent) {
-    return <div>No data found</div>;
-  }
+  // if (!pageContent) {
+  //   return <div>No data found</div>;
+  // }
 
   const goBack = () => {
     router.back();
   };
 
- 
   return (
-    <Box px={{ base: 4, md: 10 }} fontFamily={"Poppins"} > 
-     
-
+    <Box px={{ base: 4, md: 10 }} fontFamily={"Poppins"}>
       <IconButton
         icon={<ChevronLeftIcon />}
         aria-label="Back"
         boxSize={8}
-        size={'lg'}
+        size={"lg"}
         position="absolute"
         top="20px"
         left="20px"
         bg="transparent"
         onClick={goBack}
       />
-       <TopNav title={pageContent.title}/>
-       <RoundsSelector
-          roundsMap={roundsMap}
-          roundParticipations={roundParticipations}
-          selectedRound={selectedRound}
-          onRoundSelected={(round) => setSelectedRound(round)}
-        />
+      {/* <TopNav title={pageContent.title} /> */}
+      <RoundsSelector
+        roundsMap={roundsMap}
+        roundParticipations={roundParticipations}
+        selectedRound={selectedRound}
+        onRoundSelected={(round) => setSelectedRound(round)}
+      />
 
-      <Flex   direction={{base: 'column', md: 'row'}} alignItems={'center'}>
+      <Flex direction={{ base: "column", md: "row" }} alignItems={"center"}>
         <Box
-          width={{base: '90%', md: '700px'}}
+          width={{ base: "90%", md: "700px" }}
           height="auto"
           bg="white"
           boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
@@ -108,13 +100,22 @@ const [selectedRound, setSelectedRound] =
             justifyContent="center"
             boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
           >
-            <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="#2FD790">
+            <Text
+              fontSize={{ base: "2xl", md: "3xl" }}
+              fontWeight="bold"
+              color="#2FD790"
+            >
               23/50
             </Text>
           </Box>
 
           <Flex direction="column" justify="center" px={{ base: 4, md: 0 }}>
-            <Box mb={4} display={"flex"} justifyContent={"space-between"} gap={4}>
+            <Box
+              mb={4}
+              display={"flex"}
+              justifyContent={"space-between"}
+              gap={4}
+            >
               <Text>Test</Text>
               <Text>Round 1</Text>
             </Box>
@@ -144,8 +145,7 @@ const [selectedRound, setSelectedRound] =
         </Box>
 
         <Box>
-          <AnsweredButtons questions={[]}/>
-         
+          <AnsweredButtons questions={[]} />
         </Box>
       </Flex>
     </Box>

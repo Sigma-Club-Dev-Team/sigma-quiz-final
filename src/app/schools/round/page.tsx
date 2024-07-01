@@ -15,12 +15,13 @@ import {
   SchoolRoundParticipation,
 } from "@/redux/slices/quiz/quizSlice";
 import QuestionInfoSection from "./QuestionInfoSection";
+import Preloader from "@/components/UI/Preloader";
 
 const RoundPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { quizDetails, quizzesLoading, quiz, schoolRegistration } =
     useAppSelector((state) => state.quiz);
-  const { superAdminInfo, token } = useAppSelector((state) => state.auth);
+  const { superAdminInfo, token, isLoggedIn } = useAppSelector((state) => state.auth);
   const [selectedRound, setSelectedRound] =
     useState<SchoolRoundParticipation | null>(null);
 
@@ -38,7 +39,7 @@ const RoundPage: React.FC = () => {
 
   const roundParticipations = useMemo(() => {
     selectedRound?.score;
-    if (roundsMap) {
+    if (roundsMap.size > 0) {
       return (schoolRegistration?.rounds ?? []).toSorted((a, b) => {
         const bRound = roundsMap.get(b.roundId)!;
         const aRound = roundsMap.get(a.roundId)!;
@@ -54,6 +55,17 @@ const RoundPage: React.FC = () => {
       setSelectedRound(roundParticipations[0]);
     }
   }, [roundParticipations]);
+
+  useEffect(() => {
+    if (schoolRegistration) {
+     const updatedRound = schoolRegistration.rounds.find(round => round.id === selectedRound?.id);
+     if (updatedRound) {
+      setSelectedRound(updatedRound);
+     }
+    }
+  }, [schoolRegistration])
+
+  if (quizzesLoading) return <Preloader />;
 
   return (
     <Flex>
@@ -88,22 +100,22 @@ const RoundPage: React.FC = () => {
                 direction={{ base: "column", md: "row" }}
               >
                 <AnsweredButtons questions={selectedRound.answered_questions} />
-                <Link href={`/schools/round/test-details`} passHref>
+                <Link href={`/schools/round/${schoolRegistration?.id}`}>
                   <Button rightIcon={<ChevronRightIcon />}>View Details</Button>
                 </Link>
               </Flex>
             </Box>
           )}
         </Box>
-        {schoolRegistration && selectedRound && ( 
-        <ScoreBoard
-          quizScore={schoolRegistration?.score}
-          roundScore={selectedRound?.score}
-          answeredQuestions={selectedRound?.answered_questions}
-          quizRounds={schoolRegistration?.rounds}
-          position={schoolRegistration?.position}
-        />
-      )}
+        {schoolRegistration && selectedRound && (
+          <ScoreBoard
+            quizScore={schoolRegistration?.score}
+            roundScore={selectedRound?.score}
+            answeredQuestions={selectedRound?.answered_questions}
+            quizRounds={schoolRegistration?.rounds}
+            position={schoolRegistration?.position}
+          />
+        )}
       </Box>
     </Flex>
   );

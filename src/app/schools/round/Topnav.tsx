@@ -34,6 +34,8 @@ const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
       <Flex
         justifyContent={"space-between"}
         textAlign={"right"}
+        padding={'0 1rem'}
+        alignItems={'center'}
         position="fixed"
         right="0rem"
         top="0rem"
@@ -41,7 +43,9 @@ const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
         w={{ base: "95%", md: "80%" }}
         bg="#ffffff"
       >
+        <Text fontSize={'xl'} fontWeight={'700'}>{title}</Text>
         <Box ml="auto" display="flex" alignItems="center" py={4}>
+          
           <Box mr={4} textAlign="right">
             <Heading as="h3" fontSize={{ base: "12px", md: "16px" }} mb={1}>
               {title}
