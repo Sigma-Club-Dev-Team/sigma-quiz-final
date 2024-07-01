@@ -2,17 +2,21 @@ import React from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import {
   Question,
+  QuizStatus,
   SchoolRoundParticipation,
 } from "@/redux/slices/quiz/quizSlice";
 import { MapPosition } from "@/lib/constants";
+import { useAppSelector } from "@/redux/hooks";
 
 interface CircleBoxProps {
   text: string;
   bgColor?: string;
+  blur?: boolean, 
 }
 
-const CircleBox: React.FC<CircleBoxProps> = ({ text, bgColor = "#ffffff" }) => {
+const CircleBox: React.FC<CircleBoxProps> = ({ text, bgColor = "#ffffff", blur }) => {
   // Check if the text contains " / "
+  
   const hasSeparator = text.includes(" / ");
   let content;
 
@@ -52,6 +56,7 @@ const CircleBox: React.FC<CircleBoxProps> = ({ text, bgColor = "#ffffff" }) => {
       justifyContent="center"
       boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
       my={6}
+      filter={!blur? "" : "blur(5px)"}
     >
       {content}
     </Box>
@@ -77,6 +82,8 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
   let totalQuestions = 0;
   let correctlyAnswered = 0;
   let totalScore = 0;
+
+  const { quizDetails } = useAppSelector(state => state.quiz)
 
   for (const question of answeredQuestions) {
     roundTotalQuestions++;
@@ -110,7 +117,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
         <CircleBox
           text={`${roundCorrectlyAnswered} / ${roundTotalQuestions}`}
         />
-        <CircleBox text={roundScore.toString()} />
+        <CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : roundScore.toString()} />
       </Box>
 
       <Box>
@@ -118,14 +125,14 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
           Total
         </Text>
         <CircleBox text={`${correctlyAnswered} / ${totalQuestions}`} />
-        <CircleBox text={totalScore.toString()} />
+        <CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : totalScore.toString()} />
       </Box>
 
       <Box>
         <Text fontWeight="bold" textAlign="center">
           Position
         </Text>
-        <CircleBox text={MapPosition[position] || ""} bgColor="#8F19E7" />
+        {<CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : MapPosition[position] || ""} bgColor="#8F19E7" />}
       </Box>
     </Flex>
   );

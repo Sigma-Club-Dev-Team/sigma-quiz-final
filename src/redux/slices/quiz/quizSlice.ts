@@ -1,7 +1,13 @@
-import { PaginationPayload } from "@/types";
 import { createSlice, AnyAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import quizService from "./quizService";
+import { ToggleStatusPayload } from "@/types";
+
+export enum QuizStatus {
+    Pending = "pending",
+    InProgress = "in-progress",
+    Completed = "completed"
+}
 
 export interface IQuizDetail {
     id:                  string;
@@ -9,6 +15,7 @@ export interface IQuizDetail {
     title:               string;
     description:         null;
     date:                Date;
+    status:              QuizStatus;
     rounds:              Round[];
     schoolRegistrations: SchoolRegistrationElement[];
 }
@@ -96,7 +103,8 @@ type QuizState = {
     quizDetails: IQuizDetail | null,
     quizzesLoading: boolean,
     schoolRegistration: SchoolRegistrationElement | null,
-    errorFetching: boolean
+    errorFetching: boolean,
+    togglingStatus: boolean
 }
 
 const initialState = {
@@ -105,7 +113,8 @@ const initialState = {
     quizzesLoading: false,
     quizDetails: null,
     schoolRegistration: null,
-    errorFetching: false
+    errorFetching: false,
+    togglingStatus: false
 } as QuizState
 
 export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: undefined, thunkAPI) => {
@@ -119,6 +128,14 @@ export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: und
 export const getQuizDetails = createAsyncThunk('quiz/getQuizDetails', async(payload: string, thunkAPI) => {
     try{
         return await quizService.fetchQuizDetails(payload)
+    }catch(err){
+        return thunkAPI.rejectWithValue("Something went wrong")
+    }
+})
+
+export const toggleQuizStatus = createAsyncThunk('quiz/toggleQuizStatus', async(payload: ToggleStatusPayload, thunkAPI) => {
+    try{
+        return await quizService.toggleStatus(payload)
     }catch(err){
         return thunkAPI.rejectWithValue("Something went wrong")
     }
@@ -167,6 +184,18 @@ const quizSlice = createSlice({
         })
         .addCase(getQuizDetails.rejected, (state)=>{
             state.quizzesLoading = false;
+            
+            state.errorFetching = true
+        })
+        .addCase(toggleQuizStatus.pending, (state)=>{
+            state.togglingStatus = true
+        })
+        .addCase(toggleQuizStatus.fulfilled, (state, action)=>{
+            state.togglingStatus = false;
+            state.quizDetails = action.payload ?? null
+        })
+        .addCase(toggleQuizStatus.rejected, (state)=>{
+            state.togglingStatus = false;
             
             state.errorFetching = true
         })

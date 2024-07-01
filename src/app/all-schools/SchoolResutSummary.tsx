@@ -2,8 +2,9 @@
 
 import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
-import { Question } from "@/redux/slices/quiz/quizSlice";
+import { Question, QuizStatus } from "@/redux/slices/quiz/quizSlice";
 import { MapPosition } from "@/lib/constants";
+import { useAppSelector } from "@/redux/hooks";
 
 interface SchoolResultSummaryProps {
   testName: string;
@@ -22,6 +23,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
   corrects,
   wrongs,
 }) => {
+  const { quizDetails } = useAppSelector(state => state.quiz)
   return (
     <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={8}>
       <Box
@@ -36,6 +38,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
         alignItems="center"
         justifyContent="center"
         boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
+        filter={quizDetails?.status !== QuizStatus.Completed ? 'blur(5px)' : ''}
       >
         <Text fontSize={{ base: "2xl", md: "3xl" }} color="#2FD790">
           {MapPosition[position] || ""}
@@ -85,7 +88,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
           />
           <TextRow title="Correct Answers" text={corrects.length} />
           <TextRow title="Wrong Answers" text={wrongs.length} />
-          <TextRow title="Score" text={score.toString()} />
+          {quizDetails?.status === QuizStatus.Completed && <TextRow title="Score" text={score.toString()} />}
         </Flex>
       </Flex>
     </Flex>
