@@ -4,6 +4,7 @@ import {
   Question,
   SchoolRoundParticipation,
 } from "@/redux/slices/quiz/quizSlice";
+import { MapPosition } from "@/lib/constants";
 
 interface CircleBoxProps {
   text: string;
@@ -65,15 +66,6 @@ type ScoreBoardProps = {
   quizRounds: SchoolRoundParticipation[];
 };
 
-const MapPosition: { [key: number]: string } = {
-  1: "1st",
-  2: "2nd",
-  3: "3rd",
-  4: "4th",
-  5: "5th",
-  6: "6th",
-};
-
 const ScoreBoard: React.FC<ScoreBoardProps> = ({
   roundScore,
   answeredQuestions,
@@ -133,7 +125,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
         <Text fontWeight="bold" textAlign="center">
           Position
         </Text>
-        <CircleBox text={MapPosition[position]} bgColor="#8F19E7" />
+        <CircleBox text={MapPosition[position] || ""} bgColor="#8F19E7" />
       </Box>
     </Flex>
   );

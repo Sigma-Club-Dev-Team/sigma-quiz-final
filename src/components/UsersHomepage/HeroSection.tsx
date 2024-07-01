@@ -30,17 +30,16 @@ import { getQuizzes, IQuiz, setQuiz } from "@/redux/slices/quiz/quizSlice";
 import { useRouter } from "next/navigation";
 
 function HeroSection() {
-  const [quizObj, setQuizObj] = useState<IQuiz | null>(null)
+  const [quizObj, setQuizObj] = useState<IQuiz | null>(null);
   const { superAdminInfo, token } = useAppSelector((state) => state.auth);
   const { quizzes } = useAppSelector((state) => state.quiz);
   const dispatch = useAppDispatch();
-  const router = useRouter()
+  const router = useRouter();
 
-  
   const handleSetQuiz = () => {
-    dispatch(setQuiz((quizObj)))
-    router.push('/schools/round')
-  }
+    dispatch(setQuiz(quizObj));
+    router.push("/all-schools");
+  };
 
   const buttonProps = {
     variant: "ghost",
@@ -157,11 +156,13 @@ function HeroSection() {
                       bg="#ffffff"
                       color="#333333"
                     >
-                      {quizObj ? quizObj.title : 'Select a quiz to view'}
+                      {quizObj ? quizObj.title : "Select a quiz to view"}
                     </MenuButton>
                     <MenuList>
                       {quizzes.map((quiz, index) => (
-                        <MenuItem onClick={()=>setQuizObj(quiz)} key={index}>{quiz.title}</MenuItem>
+                        <MenuItem onClick={() => setQuizObj(quiz)} key={index}>
+                          {quiz.title}
+                        </MenuItem>
                       ))}
                     </MenuList>
                   </Menu>
@@ -195,7 +196,7 @@ function HeroSection() {
             </HStack>
           </Box>
 
-          <Box flex="40%" mt={20}>
+          {/* <Box flex="40%" mt={20}>
             <Box
               width="357px"
               height="auto"
@@ -232,7 +233,7 @@ function HeroSection() {
                 </Button>
               </Box>
             </Box>
-          </Box>
+          </Box> */}
         </Flex>
       </VStack>
     </Flex>
