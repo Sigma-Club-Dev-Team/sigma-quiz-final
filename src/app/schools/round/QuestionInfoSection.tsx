@@ -8,7 +8,7 @@ import {
   setQuizDetails,
   setSchoolRegistration,
 } from "@/redux/slices/quiz/quizSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { SERVER_URL } from "@/lib/constants";
 import { toast } from "sonner";
@@ -25,11 +25,18 @@ const QuestionInfoSection = ({
     null
   );
   const { isLoggedIn, token } = useAppSelector((state) => state.auth);
-  const { schoolRegistration } = useAppSelector((state) => state.quiz);
+  const { schoolRegistration, quizDetails } = useAppSelector((state) => state.quiz);
   const [markStatus, setMarkStatus] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
+
+  
+  const schoolRegistrationMap = useMemo(() => {
+    return new Map(
+      (quizDetails?.schoolRegistrations ?? [])?.map((reg) => [reg.id, reg])
+    );
+  }, [quizDetails]);
 
   const handleMarkQuestion = async (mark: string) => {
     if (selectedQuestion) {
@@ -62,11 +69,56 @@ const QuestionInfoSection = ({
           );
           setIsSubmitting(false);
         } else {
+          setIsSubmitting(false);
           toast.error("Error updating quiz");
         }
       } catch (error) {
+        setIsSubmitting(false);
         console.error("Error marking the question:", error);
         toast.error(`Error marking question ${mark}`);
+      }
+    }
+  };
+
+  const handleMarkBonusQuestion = async () => {
+    if (selectedQuestion) {
+      try {
+        setIsSubmitting(true);
+        const response = await fetch(
+          `${SERVER_URL}/api/sigma-quiz/questions/${selectedQuestion.id}/bonus`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+              school_id: schoolRegistration?.schoolId
+             })
+          }
+        );
+        if(response.ok){
+          const data:IQuizDetail = await response.json();
+          if (data) {
+            console.log({data})
+            toast.success("Bonus Point awarded")
+            dispatch(setQuizDetails(data))
+            dispatch(setSchoolRegistration(data.schoolRegistrations.find(reg => reg.id === schoolRegistration?.id) ?? schoolRegistration))
+            setIsSubmitting(false);
+          } else {
+            setIsSubmitting(false);
+            toast.error("Error updating quiz")
+          }
+        }else{
+          const data:{error: string, message: string, statusCode: number} = await response.json();
+          toast.error(data.message ?? "Error assigning bonus")
+          setIsSubmitting(false);
+
+        }
+      } catch (error) {
+        console.error("Error marking the question:", error);
+        toast.error(`Error marking question bonus`)
+        setIsSubmitting(false);
       }
     }
   };
@@ -92,7 +144,7 @@ const QuestionInfoSection = ({
           <Flex justify={"space-between"} my={4}>
             <Box fontWeight={"600"} color={"#FF0000"} fontSize={"16px"}>
               {selectedQuestion.answered_by
-                ? `Answered By: ${selectedQuestion.answered_by.schoolRegistration?.school.name}`
+                ? `Answered By: ${schoolRegistrationMap.get(selectedQuestion.answered_by.schoolRegistrationId)?.school.name}`
                 : ""}
             </Box>
             <Box color={"#33333399"} textDecoration={"underline"}>
@@ -105,9 +157,7 @@ const QuestionInfoSection = ({
                 <Button onClick={() => handleMarkQuestion("right")}>
                   Right
                 </Button>
-                <Button onClick={() => handleMarkQuestion("bonus")}>
-                  Bonus
-                </Button>
+                <Button onClick={() => handleMarkBonusQuestion()}>Bonus</Button>
                 <Button onClick={() => handleMarkQuestion("wrong")}>
                   Wrong
                 </Button>
