@@ -17,15 +17,14 @@ const QuestionsBTN = ({questions, selectedQuestion, onQuestionSelected}: {questi
   };
 
   return (
-    <Flex flexWrap="wrap" justify="center" align="center" alignItems="center">
-      <Button
+    <Flex flexWrap="wrap" gap={'.5rem'} align="center" alignItems="center">
+      {/* <Button
         {...buttonProps}
         size="sm"
         bg={"#f2f2f2"}
         leftIcon={<ChevronLeftIcon />}
         aria-label="Backward"
-        mr={2}
-      />
+      /> */}
       {questions.toSorted((a, b) => a.question_number - b.question_number).map((question, index) => {
         const isSelected = selectedQuestion?.id === question.id;
         console.log("Question:: ", question.question_number, "Is selected:: ", isSelected);
@@ -44,14 +43,14 @@ const QuestionsBTN = ({questions, selectedQuestion, onQuestionSelected}: {questi
           </Button>
         )
       })}
-      <Button
+      {/* <Button
         {...buttonProps}
         size="sm"
         rightIcon={<ChevronRightIcon />}
         aria-label="Forward"
         bg={"#f2f2f2"}
         ml={2}
-      />
+      /> */}
     </Flex>
   );
 };

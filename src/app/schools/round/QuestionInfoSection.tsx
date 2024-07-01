@@ -8,7 +8,7 @@ import {
   setQuizDetails,
   setSchoolRegistration,
 } from "@/redux/slices/quiz/quizSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { SERVER_URL } from "@/lib/constants";
 import { toast } from "sonner";
@@ -24,10 +24,17 @@ const QuestionInfoSection = ({
     null
   );
   const { isLoggedIn, token } = useAppSelector((state) => state.auth);
-  const { schoolRegistration } = useAppSelector((state) => state.quiz);
+  const { schoolRegistration, quizDetails } = useAppSelector((state) => state.quiz);
   const [markStatus, setMarkStatus] = useState<string | null>(null);
 
   const dispatch = useAppDispatch()
+
+  
+  const schoolRegistrationMap = useMemo(() => {
+    return new Map(
+      (quizDetails?.schoolRegistrations ?? [])?.map((reg) => [reg.id, reg])
+    );
+  }, [quizDetails]);
 
   const handleMarkQuestion = async (mark: string) => {
     if (selectedQuestion) {
@@ -61,6 +68,44 @@ const QuestionInfoSection = ({
     }
   };
 
+  const handleMarkBonusQuestion = async () => {
+    if (selectedQuestion) {
+      try {
+        const response = await fetch(
+          `${SERVER_URL}/api/sigma-quiz/questions/${selectedQuestion.id}/bonus`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+              school_id: schoolRegistration?.schoolId
+             })
+          }
+        );
+        if(response.ok){
+          const data:IQuizDetail = await response.json();
+          if (data) {
+            console.log({data})
+            toast.success("Bonus Point awarded")
+            dispatch(setQuizDetails(data))
+            dispatch(setSchoolRegistration(data.schoolRegistrations.find(reg => reg.id === schoolRegistration?.id) ?? schoolRegistration))
+          } else {
+            toast.error("Error updating quiz")
+          }
+        }else{
+          const data:{error: string, message: string, statusCode: number} = await response.json();
+          toast.error(data.message ?? "Error assigning bonus")
+
+        }
+      } catch (error) {
+        console.error("Error marking the question:", error);
+        toast.error(`Error marking question bonus`)
+      }
+    }
+  };
+
   useEffect(() => {
     if (markStatus) {
       console.log("Mark Status:", markStatus);
@@ -82,7 +127,7 @@ const QuestionInfoSection = ({
           <Flex justify={"space-between"} my={4}>
             <Box fontWeight={"600"} color={"#FF0000"} fontSize={"16px"}>
               {selectedQuestion.answered_by
-                ? `Answered By: ${selectedQuestion.answered_by.schoolRegistration?.school.name}`
+                ? `Answered By: ${schoolRegistrationMap.get(selectedQuestion.answered_by.schoolRegistrationId)?.school.name}`
                 : ""}
             </Box>
             <Box color={"#33333399"} textDecoration={"underline"}>
@@ -92,7 +137,7 @@ const QuestionInfoSection = ({
           {isLoggedIn ? (
             <Flex justify={"space-between"} my={4} flexWrap={"wrap"}>
               <Button onClick={() => handleMarkQuestion("right")}>Right</Button>
-              <Button onClick={() => handleMarkQuestion("bonus")}>Bonus</Button>
+              <Button onClick={() => handleMarkBonusQuestion()}>Bonus</Button>
               <Button onClick={() => handleMarkQuestion("wrong")}>Wrong</Button>
             </Flex>
           ) : (
