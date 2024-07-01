@@ -18,6 +18,7 @@ import {
   getAllWrongAnsweredQuestions,
 } from "@/lib/utilityFunctions";
 import Preloader from "@/components/UI/Preloader";
+import NoSelectedQuizError from "@/components/NoSelectedQuizError";
 
 const DetailsPage: React.FC = () => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     quiz && dispatch(getQuizDetails(quiz?.id));
   }, []);
-  
+
   const roundsMap = useMemo(() => {
     const map = new Map<string, Round>();
     quizDetails?.rounds.forEach((round) => {
@@ -45,108 +46,98 @@ const DetailsPage: React.FC = () => {
     return map;
   }, [quizDetails]);
 
-  if (quizzesLoading) return <Preloader />;
-  if (!quiz && !quizDetails) {
-    return (
-      <Flex
-        align={"center"}
-        justify={"center"}
-        w={"100dvw"}
-        h={"100dvh"}
-        flexDirection={"column"}
-      >
-        <p>Error Fetching Quiz detail.</p> <br />
-        <Text>
-          <Link href="/" color={"brand.purple"}>
-            Back to Home Page
-          </Link>
-        </Text>
-      </Flex>
-    );
-  }
   return (
-    <Flex>
-      <SideBar />
-      <Box
-        minW={{ base: "100%", md: "80%" }}
-        marginLeft={{ base: "0%", md: "20%" }}
-        px={{ base: "4", md: "10" }}
-      >
-        <Box fontFamily={"Poppins"}>
-          <TopNav title="" />
-          <AllSchoolsRoundsSelector
-            selectedRound={selectedRound}
-            rounds={quizDetails?.rounds ?? []}
-            onRoundSelected={(round) => setSelectedRound(round)}
-          />
+    <>
+      <NoSelectedQuizError />
+      <Flex>
+        <SideBar />
+        <Box
+          minW={{ base: "100%", md: "80%" }}
+          marginLeft={{ base: "0%", md: "20%" }}
+          px={{ base: "4", md: "10" }}
+        >
+          <Box fontFamily={"Poppins"}>
+            <TopNav title="" />
+            <AllSchoolsRoundsSelector
+              selectedRound={selectedRound}
+              rounds={quizDetails?.rounds ?? []}
+              onRoundSelected={(round) => setSelectedRound(round)}
+            />
 
-          {quizDetails?.schoolRegistrations.map((registration) => {
-            const schoolRoundParticipation = registration?.rounds.find(
-              (participation) => participation.roundId === selectedRound?.id
-            );
-            return (
-              <Box key={registration.id}>
-                <Flex
-                  justifyContent={"space-between"}
-                  width={{ base: "100%", md: "800px" }}
-                  mt={2}
-                  px={{ base: "6", md: "0" }}
-                >
-                  <Box>
-                    <Text fontSize="xl">{registration.school.name}</Text>
-                  </Box>
-                  <Box>
-                    <Link href={`/schools/round/${registration.id}`}>
-                      <Flex
-                        alignItems="center"
-                        color="blue.500"
-                        _hover={{ textDecoration: "underline" }}
-                      >
-                        <Text>See more</Text>
-                        <ChevronRightIcon />
-                      </Flex>
-                    </Link>
-                  </Box>
-                </Flex>
-                {selectedRound ? (
-                  schoolRoundParticipation ? <SchoolResultSummary
-                    testName={selectedRound.name}
-                    position={schoolRoundParticipation?.position ?? 0}
-                    score={schoolRoundParticipation?.score! ?? 0}
-                    corrects={
-                      schoolRoundParticipation?.answered_questions?.filter(
-                        (answeredQuestions) =>
-                          answeredQuestions.answered_correctly
-                      )! ?? []
-                    }
-                    wrongs={
-                      schoolRoundParticipation?.answered_questions?.filter(
-                        (answeredQuestions) =>
-                          !answeredQuestions.answered_correctly
-                      )! ?? []
-                    }
-                    answeredQuestions={
-                      schoolRoundParticipation?.answered_questions! ?? []
-                    }
-                  /> : "Round Not Available for School"
-                ) : (
-                  <SchoolResultSummary
-                    testName={"Overall"}
-                    position={registration?.position ?? 0}
-                    score={registration.score}
-                    corrects={getAllRightAnsweredQuestions(registration.rounds)}
-                    wrongs={getAllWrongAnsweredQuestions(registration.rounds)}
-                    answeredQuestions={getAllAnsweredQuestions(
-                      registration.rounds
-                    )}
-                  />
-                )}
-              </Box>
-            );
-          })}
+            {quizDetails?.schoolRegistrations.map((registration) => {
+              const schoolRoundParticipation = registration?.rounds.find(
+                (participation) => participation.roundId === selectedRound?.id
+              );
+              return (
+                <Box key={registration.id}>
+                  <Flex
+                    justifyContent={"space-between"}
+                    width={{ base: "100%", md: "800px" }}
+                    mt={2}
+                    px={{ base: "6", md: "0" }}
+                  >
+                    <Box>
+                      <Text fontSize="xl">{registration.school.name}</Text>
+                    </Box>
+                    <Box>
+                      <Link href={`/schools/round/${registration.id}`}>
+                        <Flex
+                          alignItems="center"
+                          color="blue.500"
+                          _hover={{ textDecoration: "underline" }}
+                        >
+                          <Text>See more</Text>
+                          <ChevronRightIcon />
+                        </Flex>
+                      </Link>
+                    </Box>
+                  </Flex>
+                  {selectedRound ? (
+                    schoolRoundParticipation ? (
+                      <SchoolResultSummary
+                        testName={selectedRound.name}
+                        position={schoolRoundParticipation?.position ?? 0}
+                        score={schoolRoundParticipation?.score! ?? 0}
+                        corrects={
+                          schoolRoundParticipation?.answered_questions?.filter(
+                            (answeredQuestions) =>
+                              answeredQuestions.answered_correctly
+                          )! ?? []
+                        }
+                        wrongs={
+                          schoolRoundParticipation?.answered_questions?.filter(
+                            (answeredQuestions) =>
+                              !answeredQuestions.answered_correctly
+                          )! ?? []
+                        }
+                        answeredQuestions={
+                          schoolRoundParticipation?.answered_questions! ?? []
+                        }
+                      />
+                    ) : (
+                      "Round Not Available for School"
+                    )
+                  ) : (
+                    <SchoolResultSummary
+                      testName={"Overall"}
+                      position={registration?.position ?? 0}
+                      score={registration.score}
+                      corrects={getAllRightAnsweredQuestions(
+                        registration.rounds
+                      )}
+                      wrongs={getAllWrongAnsweredQuestions(registration.rounds)}
+                      answeredQuestions={getAllAnsweredQuestions(
+                        registration.rounds
+                      )}
+                    />
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
-      </Box>
-    </Flex>
+      </Flex>
+    </>
   );
 };
 
