@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { SERVER_URL } from "@/lib/constants";
 import { toast } from "sonner";
+import Spinner from "@/components/UI/Spinner";
 
 const QuestionInfoSection = ({
   selectedRound,
@@ -26,37 +27,46 @@ const QuestionInfoSection = ({
   const { isLoggedIn, token } = useAppSelector((state) => state.auth);
   const { schoolRegistration } = useAppSelector((state) => state.quiz);
   const [markStatus, setMarkStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handleMarkQuestion = async (mark: string) => {
     if (selectedQuestion) {
       try {
+        setIsSubmitting(true);
         const response = await fetch(
           `${SERVER_URL}/api/sigma-quiz/questions/${selectedQuestion.id}/mark`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               school_id: schoolRegistration?.schoolId,
-              answered_correctly: mark === 'right' ? true : false
-             })
+              answered_correctly: mark === "right" ? true : false,
+            }),
           }
         );
-        const data:IQuizDetail = await response.json();
+        const data: IQuizDetail = await response.json();
         if (data) {
-          console.log({data})
-          dispatch(setQuizDetails(data))
-          dispatch(setSchoolRegistration(data.schoolRegistrations.find(reg => reg.id === schoolRegistration?.id) ?? schoolRegistration))
+          console.log({ data });
+          dispatch(setQuizDetails(data));
+          dispatch(
+            setSchoolRegistration(
+              data.schoolRegistrations.find(
+                (reg) => reg.id === schoolRegistration?.id
+              ) ?? schoolRegistration
+            )
+          );
+          setIsSubmitting(false);
         } else {
-          toast.error("Error updating quiz")
+          toast.error("Error updating quiz");
         }
       } catch (error) {
         console.error("Error marking the question:", error);
-        toast.error(`Error marking question ${mark}`)
+        toast.error(`Error marking question ${mark}`);
       }
     }
   };
@@ -90,15 +100,37 @@ const QuestionInfoSection = ({
             </Box>
           </Flex>
           {isLoggedIn ? (
-            <Flex justify={"space-between"} my={4} flexWrap={"wrap"}>
-              <Button onClick={() => handleMarkQuestion("right")}>Right</Button>
-              <Button onClick={() => handleMarkQuestion("bonus")}>Bonus</Button>
-              <Button onClick={() => handleMarkQuestion("wrong")}>Wrong</Button>
-            </Flex>
+            <>
+              <Flex justify={"space-between"} my={4} flexWrap={"wrap"}>
+                <Button onClick={() => handleMarkQuestion("right")}>
+                  Right
+                </Button>
+                <Button onClick={() => handleMarkQuestion("bonus")}>
+                  Bonus
+                </Button>
+                <Button onClick={() => handleMarkQuestion("wrong")}>
+                  Wrong
+                </Button>
+              </Flex>
+              <Flex
+                justify={"center"}
+                align={"center"}
+                my={4}
+                flexWrap={"wrap"}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner />
+                    <Text ml={"2"} fontSize={"16px"}>
+                      Submitting answer, please wait...
+                    </Text>
+                  </>
+                ) : null}
+              </Flex>
+            </>
           ) : (
             ""
           )}
-        
         </>
       )}
     </Box>
