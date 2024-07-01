@@ -12,6 +12,7 @@ import {
   HStack,
   Avatar,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import { FaPlay } from "react-icons/fa";
 import {
@@ -35,11 +36,22 @@ function HeroSection() {
   const { quizzes } = useAppSelector((state) => state.quiz);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const toast = useToast();
 
   const handleSetQuiz = () => {
-    dispatch(setQuiz((quizObj)))
-    router.push('/all-schools')
-  }
+    if (quizObj) {
+      dispatch(setQuiz(quizObj));
+      router.push('/all-schools');
+    } else {
+      toast({
+        title: "Select a quiz",
+        description: "Please select a quiz to view.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
 
   const buttonProps = {
     variant: "ghost",
@@ -57,8 +69,16 @@ function HeroSection() {
   };
 
   useEffect(() => {
-    dispatch(getQuizzes());
-  }, []);
+    dispatch(getQuizzes()).unwrap().catch(() => {
+      toast({
+        title: "Error loading quizzes.",
+        description: "There was an error loading the quizzes. Please try again later.",
+        status: "error",
+        duration: null,
+        isClosable: true,
+      });
+    });
+  }, [dispatch, toast]);
 
   return (
     <Flex
