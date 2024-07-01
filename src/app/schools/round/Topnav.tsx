@@ -53,7 +53,7 @@ const HeaderContent: React.FC<{ title?: string }> = ({ title }) => {
         w={{ base: "95%", md: "80%" }}
         bg="#ffffff"
       >
-        <Text fontSize={'xl'} fontWeight={'700'}>{title}</Text>
+        <Text fontSize={{ base: "12px", md: "16px" }} ml={{ base: "18px", md: "0px" }} fontWeight={'700'}>{title}</Text>
         <Box ml="auto" display="flex" alignItems="center" py={4}>
           
           <Box mr={4} textAlign="right">
