@@ -22,7 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <Provider store={store}>
         <PersistGate loading={<Preloader />} persistor={persistor}>
             <ChakraProvider theme={chakraTheme}>
-                <Toaster richColors position="bottom-right" />
+                <Toaster richColors position="bottom-right" duration={10000} />
                 {children}
             </ChakraProvider>
         </PersistGate>
