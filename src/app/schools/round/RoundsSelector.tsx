@@ -6,12 +6,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Round, SchoolRoundParticipation } from "@/redux/slices/quiz/quizSlice";
+import { useAppSelector } from "@/redux/hooks";
 
 
 const RoundsSelector = ({onRoundSelected, selectedRound, roundParticipations, roundsMap}: {
   roundsMap: Map<string, Round>,
   roundParticipations: SchoolRoundParticipation[],
   onRoundSelected: (newRound: SchoolRoundParticipation)=> void, selectedRound: SchoolRoundParticipation | null}) => {
+
+    const { schoolRegistration } = useAppSelector(state => state.quiz)
 
   const buttonProps = {
     fontFamily: "Poppins",
@@ -26,7 +29,7 @@ const RoundsSelector = ({onRoundSelected, selectedRound, roundParticipations, ro
      
       <Box px={8}>
         <Text fontSize={"16px"} color={"#333333"}>
-          Test Details
+          {schoolRegistration?.school.name}
         </Text>
         <Flex justify={"space-between"} flexWrap={'wrap'}>
           <Flex py={4} flexWrap={'wrap'}>

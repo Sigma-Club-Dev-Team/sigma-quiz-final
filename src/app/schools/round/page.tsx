@@ -48,13 +48,13 @@ const RoundPage: React.FC = () => {
     } else {
       return [];
     }
-  }, [schoolRegistration, roundsMap]);
+  }, [schoolRegistration, roundsMap, quizDetails]);
 
   useEffect(() => {
     if (roundParticipations.length > 0) {
       setSelectedRound(roundParticipations[0]);
     }
-  }, [roundParticipations]);
+  }, [roundParticipations, quizDetails]);
 
   useEffect(() => {
     if (schoolRegistration) {

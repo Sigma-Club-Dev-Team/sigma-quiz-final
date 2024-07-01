@@ -84,6 +84,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
   let totalScore = 0;
 
   const { quizDetails } = useAppSelector(state => state.quiz)
+  const { isLoggedIn } = useAppSelector(state => state.auth)
 
   for (const question of answeredQuestions) {
     roundTotalQuestions++;
@@ -108,32 +109,40 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
     totalScore += round.score;
   }
 
+  const blurCondition = !isLoggedIn && (quizDetails?.status !== QuizStatus.Completed)
+
   return (
     <Flex justify="space-around" px={8} py={10} flexWrap="wrap">
-      <Box>
+      <Flex direction={'column'} alignItems={'center'}>
         <Text fontWeight="bold" textAlign="center">
-          Scores
+        Answered Questions in Round
         </Text>
         <CircleBox
           text={`${roundCorrectlyAnswered} / ${roundTotalQuestions}`}
         />
-        <CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : roundScore.toString()} />
-      </Box>
-
-      <Box>
         <Text fontWeight="bold" textAlign="center">
-          Total
+          Score in Round
+        </Text>
+        <CircleBox blur={blurCondition} text={blurCondition ? '##' : roundScore.toString()} />
+      </Flex>
+
+      <Flex direction={'column'} alignItems={'center'}>
+        <Text fontWeight="bold" textAlign="center">
+          Answered Questions in Quiz
         </Text>
         <CircleBox text={`${correctlyAnswered} / ${totalQuestions}`} />
-        <CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : totalScore.toString()} />
-      </Box>
+        <Text fontWeight="bold" textAlign="center">
+          Score in Quiz
+        </Text>
+        <CircleBox blur={blurCondition} text={blurCondition ? '##' : totalScore.toString()} />
+      </Flex>
 
-      <Box>
+      <Flex direction={'column'} alignItems={'center'}>
         <Text fontWeight="bold" textAlign="center">
           Position
         </Text>
-        {<CircleBox blur={quizDetails?.status !== QuizStatus.Completed} text={quizDetails?.status !== QuizStatus.Completed ? '##' : MapPosition[position] || ""} bgColor="#8F19E7" />}
-      </Box>
+        {<CircleBox blur={blurCondition} text={blurCondition ? '##' : MapPosition[position] || ""} bgColor="#8F19E7" />}
+      </Flex>
     </Flex>
   );
 };

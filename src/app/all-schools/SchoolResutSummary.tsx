@@ -24,6 +24,9 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
   wrongs,
 }) => {
   const { quizDetails } = useAppSelector(state => state.quiz)
+  const { isLoggedIn } = useAppSelector(state => state.auth)
+
+  const blurCondition = !isLoggedIn && (quizDetails?.status !== QuizStatus.Completed)
   return (
     <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={8}>
       <Box
@@ -38,7 +41,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
         alignItems="center"
         justifyContent="center"
         boxShadow="0 0 10px rgba(0, 0, 0, 0.5)"
-        filter={quizDetails?.status !== QuizStatus.Completed ? 'blur(5px)' : ''}
+        filter={blurCondition ? 'blur(5px)' : ''}
       >
         <Text fontSize={{ base: "2xl", md: "3xl" }} color="#2FD790">
           {MapPosition[position] || ""}
@@ -88,7 +91,7 @@ const SchoolResultSummary: React.FC<SchoolResultSummaryProps> = ({
           />
           <TextRow title="Correct Answers" text={corrects.length} />
           <TextRow title="Wrong Answers" text={wrongs.length} />
-          {quizDetails?.status === QuizStatus.Completed && <TextRow title="Score" text={score.toString()} />}
+          {blurCondition && <TextRow title="Score" text={score.toString()} />}
         </Flex>
       </Flex>
     </Flex>
