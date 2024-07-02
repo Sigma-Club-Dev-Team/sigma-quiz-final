@@ -32,6 +32,8 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   IQuizDetail,
+  persistSelectedRoundParticipation,
+  resetPolling,
   SchoolRegistrationElement,
   setSchoolRegistration,
 } from "@/redux/slices/quiz/quizSlice";
@@ -49,6 +51,8 @@ const Sidebar: React.FC = () => {
 
   const handleSetSchool = (school: SchoolRegistrationElement) => {
     console.log(pathname);
+    dispatch(persistSelectedRoundParticipation(null));
+    dispatch(resetPolling());
     dispatch(setSchoolRegistration(school));
     if (pathname === "/all-schools") {
       router.push("/schools/round");

@@ -11,6 +11,7 @@ import ScoreBoard from "./ScoreBoard";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   getQuizDetails,
+  persistSelectedRoundParticipation,
   Round,
   SchoolRoundParticipation,
   setSchoolRegistration,
@@ -18,10 +19,11 @@ import {
 import QuestionInfoSection from "./QuestionInfoSection";
 import Preloader from "@/components/UI/Preloader";
 import NoSelectedQuizError from "@/components/NoSelectedQuizError";
+import usePolling from "@/redux/usePolling";
 
 const RoundPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { quizDetails, quizzesLoading, quiz, schoolRegistration } =
+  const { quizDetails, selectedRoundParticipation, quiz, schoolRegistration } =
     useAppSelector((state) => state.quiz);
   const { superAdminInfo, token, isLoggedIn } = useAppSelector(
     (state) => state.auth
@@ -34,6 +36,11 @@ const RoundPage: React.FC = () => {
       dispatch(getQuizDetails(quiz.id));
     }
   }, []);
+
+  // Polling Quiz Details after every 10 seconds with debouncing with quizzesLoading: true
+  if(quiz){
+    usePolling(quiz.id, isLoggedIn, schoolRegistration?.id)
+  }
 
   const roundsMap = useMemo(() => {
     return new Map(
@@ -56,7 +63,12 @@ const RoundPage: React.FC = () => {
 
   useEffect(() => {
     if (roundParticipations.length > 0) {
-      setSelectedRound(roundParticipations[0]);
+      if(selectedRoundParticipation){
+        setSelectedRound(selectedRoundParticipation);
+      }else{
+        setSelectedRound(roundParticipations[0]);
+        dispatch(persistSelectedRoundParticipation(roundParticipations[0]))
+      }
     }
   }, [roundParticipations, quizDetails]);
 
@@ -70,6 +82,12 @@ const RoundPage: React.FC = () => {
       }
     }
   }, [schoolRegistration]);
+  
+  const handleRoundSelected = (round: SchoolRoundParticipation) => {
+    setSelectedRound(round);
+    dispatch(persistSelectedRoundParticipation(round))
+
+  }
 
   return (
     <>
@@ -86,7 +104,7 @@ const RoundPage: React.FC = () => {
             roundsMap={roundsMap}
             roundParticipations={roundParticipations}
             selectedRound={selectedRound}
-            onRoundSelected={(round) => setSelectedRound(round)}
+            onRoundSelected={(round) => handleRoundSelected(round)}
           />
 
           <Box px={8} fontFamily={"Poppins"}>

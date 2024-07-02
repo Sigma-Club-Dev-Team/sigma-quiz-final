@@ -27,7 +27,6 @@ const QuestionsBTN = ({questions, selectedQuestion, onQuestionSelected}: {questi
       /> */}
       {questions.toSorted((a, b) => a.question_number - b.question_number).map((question, index) => {
         const isSelected = selectedQuestion?.id === question.id;
-        console.log("Question:: ", question.question_number, "Is selected:: ", isSelected);
         return (
           <Button
             key={index}

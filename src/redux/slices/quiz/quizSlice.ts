@@ -104,7 +104,10 @@ type QuizState = {
     quizzesLoading: boolean,
     schoolRegistration: SchoolRegistrationElement | null,
     errorFetching: boolean,
-    togglingStatus: boolean
+    togglingStatus: boolean,
+    polling: boolean,
+    selectedRoundParticipation: SchoolRoundParticipation | null,
+    pollingReset: boolean
 }
 
 const initialState = {
@@ -114,7 +117,10 @@ const initialState = {
     quizDetails: null,
     schoolRegistration: null,
     errorFetching: false,
-    togglingStatus: false
+    togglingStatus: false,
+    polling: false,
+    selectedRoundParticipation: null,
+    pollingReset: false
 } as QuizState
 
 export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: undefined, thunkAPI) => {
@@ -128,6 +134,15 @@ export const getQuizzes = createAsyncThunk('quiz/getQuizzes', async(payload: und
 export const getQuizDetails = createAsyncThunk('quiz/getQuizDetails', async(payload: string, thunkAPI) => {
     try{
         return await quizService.fetchQuizDetails(payload)
+    }catch(err){
+        return thunkAPI.rejectWithValue("Something went wrong")
+    }
+})
+
+export const pollQuizDetails = createAsyncThunk('quiz/pollQuizDetails', async(payload:{quizId: string, schRegId?: string}, thunkAPI) => {
+    try{
+        const quizDetails = await quizService.fetchQuizDetails(payload.quizId)
+        return {quizDetails, schRegId: payload.schRegId}
     }catch(err){
         return thunkAPI.rejectWithValue("Something went wrong")
     }
@@ -156,7 +171,14 @@ const quizSlice = createSlice({
         setSchoolRegistration(state, action){
             const {payload} = action
             state.schoolRegistration = payload
-        }
+        },
+        persistSelectedRoundParticipation(state, action){
+            const {payload} = action
+            state.selectedRoundParticipation = payload
+        },
+        resetPolling: (state) => {
+            state.pollingReset = !state.pollingReset; // Toggle to force re-render
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action: AnyAction)=>{
@@ -187,6 +209,20 @@ const quizSlice = createSlice({
             
             state.errorFetching = true
         })
+        .addCase(pollQuizDetails.pending, (state)=>{
+            state.polling = true
+        })
+        .addCase(pollQuizDetails.fulfilled, (state, action : {payload : {quizDetails: IQuizDetail, schRegId?: string}})=>{
+            const { payload } = action
+            state.polling = false;
+            state.quizDetails = payload.quizDetails ?? null
+            console.log(payload)
+            // state.schoolRegistration = payload.quizDetails.schoolRegistrations.find(sch => sch.id === payload.schRegId) ?? state.schoolRegistration
+        })
+        .addCase(pollQuizDetails.rejected, (state)=>{
+            state.polling = false;
+            state.errorFetching = true
+        })
         .addCase(toggleQuizStatus.pending, (state)=>{
             state.togglingStatus = true
         })
@@ -202,6 +238,6 @@ const quizSlice = createSlice({
     }
 })
 
-export const { setQuiz, setSchoolRegistration, setQuizDetails } = quizSlice.actions
+export const { setQuiz, setSchoolRegistration, setQuizDetails, persistSelectedRoundParticipation, resetPolling } = quizSlice.actions
 const quizReducer = quizSlice.reducer
 export default quizReducer
